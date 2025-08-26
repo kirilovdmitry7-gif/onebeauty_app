@@ -8,15 +8,15 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Ставим ПОСЛЕДНИЙ стабильный Flutter (с нужным Dart 3.9+)
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: "stable"
+          flutter-version: "3.24.0"
 
       - name: Flutter doctor (debug)
         run: flutter --version
@@ -27,9 +27,16 @@ jobs:
       - name: Build Flutter Web
         run: flutter build web --release
 
+      # Главное изменение — используем ENV и новую схему CLI
       - name: Deploy to Vercel
-        run: npx vercel --prod --yes `
-          --token=${{ secrets.VERCEL_TOKEN }} `
-          --confirm `
-          --scope=${{ secrets.VERCEL_ORG_ID }} `
-          --project=${{ secrets.VERCEL_PROJECT_ID }}
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          # подтягиваем конфиг проекта с Vercel (environment=production)
+          npx vercel pull --yes --environment=production
+          # собираем prebuilt артефакт (Vercel CLI создаст .vercel/output)
+          npx vercel build
+          # деплоим уже собранное (без дополнительного билда на стороне Vercel)
+          npx vercel deploy --prebuilt --prod --yes
