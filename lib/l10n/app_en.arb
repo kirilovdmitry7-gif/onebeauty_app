@@ -1,0 +1,165 @@
+{
+  "appTitle": "OneBeauty",
+
+  "tabHealth": "Health",
+  "tabStudio": "Studio",
+  "tabStore": "Store",
+
+  "signOut": "Sign out",
+  "saved": "Saved",
+  "save": "Save",
+  "language": "Language",
+
+  "profileTitle": "Profile",
+  "profileEmail": "Email",
+  "profilePhone": "Phone",
+  "profileDisplayName": "Display name",
+  "profileAccount": "Account",
+
+  "obHealthTitle": "Daily health",
+  "obHealthText": "Track water, steps and sleep with simple daily checks.",
+  "obStudioTitle": "Studio",
+  "obStudioText": "Book sessions and keep your schedule tidy.",
+  "obStoreTitle": "Store",
+  "obStoreText": "Buy care products and accessories in one place.",
+  "obSkip": "Skip",
+  "obNext": "Next",
+  "obStart": "Start",
+
+  "authTitle": "Sign in / Register",
+  "authLoginTab": "Login",
+  "authRegisterTab": "Register",
+  "authPhoneTab": "Phone",
+  "authContinueGoogle": "Continue with Google",
+  "authEmail": "Email",
+  "authPassword": "Password",
+  "authSignIn": "Sign in",
+  "authCreateAccount": "Create account",
+  "authPhone": "Phone number",
+  "authCodeHint": "Verification code",
+  "authSendCode": "Send code",
+
+  "greetHello": "Hello! 👋",
+  "greetHelloName": "Hello, {name}! 👋",
+  "@greetHelloName": { "placeholders": { "name": { "type": "String" } } },
+
+  "goalHintHealth": "Make small daily steps: water, steps, sleep.",
+  "goalHintSkin": "Skin-care tracker and tips are coming soon.",
+  "goalHintFitness": "Keep active: steps, stretch, sleep.",
+  "healthResetTooltip": "Reset today's checks",
+
+  "surveyTitle": "Quick survey",
+  "surveyIntro": "Takes under a minute and helps tailor recommendations.",
+  "surveyBirthDate": "Birth date",
+  "surveyPickDate": "Pick a date",
+  "surveyGender": "Gender",
+  "surveyMale": "Male",
+  "surveyFemale": "Female",
+  "surveyOther": "Other",
+  "surveyGoal": "Main goal",
+  "surveyGoalHealth": "Overall health",
+  "surveyGoalSkin": "Skin care",
+  "surveyGoalFitness": "Fitness shape",
+  "surveySaveContinue": "Save and continue",
+  "surveyErrorFillAll": "Please fill all fields",
+
+  "studioMessage": "Studio is coming soon.",
+  "storeMessage": "Store is coming soon.",
+
+  "taskWater": "Drink 8 glasses of water 💧",
+  "taskSteps": "Walk 6–8k steps 🚶",
+  "taskSleep": "Go to bed by 23:00 😴",
+  "taskStretch": "5–10 min stretch 🤸",
+  "taskMind": "5 min mindfulness 🧘",
+
+  "authErrEmailPasswordRequired": "Email and password are required",
+  "authErrPhoneCodeRequired": "Phone and code are required",
+  "authErrInvalidCode": "Invalid code (use 0000)",
+
+  "healthBannerText": "Hi there! 👋 We’ll add a skincare tracker and recommendations soon.",
+  "resetToday": "Reset today’s checks",
+
+  "healthProgress": "{done} of {total} done",
+  "@healthProgress": {
+    "placeholders": {
+      "done": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "healthAllDone": "All done for today! 🎉",
+
+  "streakTitle": "Your streak",
+  "streakDays": "{days} days in a row",
+  "@streakDays": {
+    "placeholders": {
+      "days": { "type": "int" }
+    }
+  },
+
+  "healthWeekTitle": "This week",
+  "healthDayDone": "{done}/{total}",
+  "@healthDayDone": {
+    "placeholders": {
+      "done": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+
+  "surveyNext": "Next",
+  "surveyBack": "Back",
+  "surveySave": "Save",
+  "surveyAge": "Age",
+  "surveyFitness": "Fitness level",
+  "surveyBeginner": "Beginner",
+  "surveyIntermediate": "Intermediate",
+  "surveyAdvanced": "Advanced",
+  "surveyGoals": "Goals",
+  "goalWeightLoss": "Weight loss",
+  "goalBetterSleep": "Better sleep",
+  "goalEnergy": "More energy",
+  "goalDiscipline": "Discipline",
+  "goalStress": "Less stress",
+  "surveyLifestyle": "Lifestyle",
+  "lifestyleSedentary": "Sedentary",
+  "lifestyleActive": "Active",
+  "surveyRestrictions": "Restrictions",
+  "rVegan": "Vegan",
+  "rVegetarian": "Vegetarian",
+  "rNoAlcohol": "No alcohol",
+  "rNoCaffeine": "No caffeine",
+  "rAllergyNuts": "Nut allergy",
+  "rHypertension": "Hypertension",
+  "surveyBody": "Body parameters",
+  "surveyWeight": "Weight (kg)",
+  "surveyHeight": "Height (cm)",
+  "saved": "Saved",
+
+  "surveyStress": "Stress level",
+  "stressLow": "Low",
+  "stressMedium": "Medium",
+  "stressHigh": "High",
+  "surveySleep": "Sleep quality",
+  "sleepPoor": "Poor",
+  "sleepAverage": "Average",
+  "sleepGood": "Good",
+
+  "planTomorrow": "Plan for tomorrow",
+  "close": "Close",
+
+  "newFeatureTitle": "Awesome new feature",
+  "newFeatureDesc": "Try our AI-based challenge generator!",
+
+  "planToday": "Plan for today",
+  "aiPlan": "AI plan",
+  "catalogTasks": "Today's tasks",
+  "addToPlan": "Add to plan",
+  "addedToPlan": "Added to plan",
+
+  "devTestMessage": "Localization pipeline works!"
+,
+"devTestMessage": "Localization pipeline works!"
+
+,
+"testAuto": "Hello world"
+
+}

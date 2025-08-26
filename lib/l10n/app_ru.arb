@@ -1,0 +1,154 @@
+{
+  "appTitle": "OneBeauty",
+  "tabHealth": "Здоровье",
+  "tabStudio": "Студия",
+  "tabStore": "Магазин",
+  "signOut": "Выйти",
+  "saved": "Сохранено",
+  "save": "Сохранить",
+  "language": "Язык",
+  "profileTitle": "Профиль",
+  "profileEmail": "Email",
+  "profilePhone": "Телефон",
+  "profileDisplayName": "Отображаемое имя",
+  "profileAccount": "Аккаунт",
+  "obHealthTitle": "Ежедневное здоровье",
+  "obHealthText": "Отмечай воду, шаги и сон — простые ежедневные цели.",
+  "obStudioTitle": "Студия",
+  "obStudioText": "Записывайся на сессии и веди расписание.",
+  "obStoreTitle": "Магазин",
+  "obStoreText": "Покупай уход и аксессуары в одном месте.",
+  "obSkip": "Пропустить",
+  "obNext": "Далее",
+  "obStart": "Начать",
+  "authTitle": "Вход / Регистрация",
+  "authLoginTab": "Вход",
+  "authRegisterTab": "Регистрация",
+  "authPhoneTab": "Телефон",
+  "authContinueGoogle": "Продолжить через Google",
+  "authEmail": "Email",
+  "authPassword": "Пароль",
+  "authSignIn": "Войти",
+  "authCreateAccount": "Создать аккаунт",
+  "authPhone": "Номер телефона",
+  "authCodeHint": "Код подтверждения",
+  "authSendCode": "Отправить код",
+  "greetHello": "Привет! 👋",
+  "greetHelloName": "Привет, {name}! 👋",
+  "@greetHelloName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "goalHintHealth": "Делай маленькие шаги каждый день: вода, шаги, сон.",
+  "goalHintSkin": "Скоро добавим трекер ухода за кожей и рекомендации.",
+  "goalHintFitness": "Поддерживай активность: шаги, растяжка, сон.",
+  "healthResetTooltip": "Сбросить отметки на сегодня",
+  "surveyTitle": "Анкета здоровья",
+  "surveyIntro": "Займёт менее минуты и поможет подобрать рекомендации.",
+  "surveyBirthDate": "Дата рождения",
+  "surveyPickDate": "Выбрать дату",
+  "surveyGender": "Пол",
+  "surveyMale": "Мужской",
+  "surveyFemale": "Женский",
+  "surveyOther": "Другое",
+  "surveyGoal": "Основная цель",
+  "surveyGoalHealth": "Общее здоровье",
+  "surveyGoalSkin": "Уход за кожей",
+  "surveyGoalFitness": "Фитнес‑форма",
+  "surveySaveContinue": "Сохранить и продолжить",
+  "surveyErrorFillAll": "Пожалуйста, заполните все поля",
+  "studioMessage": "Studio появится совсем скоро.",
+  "storeMessage": "Store появится совсем скоро.",
+  "taskWater": "Выпей 8 стаканов воды 💧",
+  "taskSteps": "Пройди 6–8 тысяч шагов 🚶",
+  "taskSleep": "Ложись спать до 23:00 😴",
+  "taskStretch": "Растяжка 5–10 минут 🤸",
+  "taskMind": "Осознанность 5 минут 🧘",
+  "authErrEmailPasswordRequired": "Нужны email и пароль",
+  "authErrPhoneCodeRequired": "Нужны телефон и код",
+  "authErrInvalidCode": "Неверный код (используйте 0000)",
+  "healthBannerText": "Привет, ага! 👋 Скоро добавим трекер ухода за кожей и рекомендации.",
+  "resetToday": "Сбросить отметки за сегодня",
+  "healthProgress": "Выполнено {done} из {total}",
+  "@healthProgress": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "healthAllDone": "На сегодня всё! 🎉",
+  "streakTitle": "Ваша серия",
+  "streakDays": "{days} дней подряд",
+  "@streakDays": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "healthWeekTitle": "Эта неделя",
+  "healthDayDone": "{done}/{total}",
+  "@healthDayDone": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "surveyNext": "Далее",
+  "surveyBack": "Назад",
+  "surveySave": "Сохранить",
+  "surveyAge": "Возраст",
+  "surveyFitness": "Уровень подготовки",
+  "surveyBeginner": "Новичок",
+  "surveyIntermediate": "Средний",
+  "surveyAdvanced": "Продвинутый",
+  "surveyGoals": "Цели",
+  "goalWeightLoss": "Снижение веса",
+  "goalBetterSleep": "Лучший сон",
+  "goalEnergy": "Больше энергии",
+  "goalDiscipline": "Дисциплина",
+  "goalStress": "Меньше стресса",
+  "surveyLifestyle": "Образ жизни",
+  "lifestyleSedentary": "Сидячий",
+  "lifestyleActive": "Активный",
+  "surveyRestrictions": "Ограничения",
+  "rVegan": "Веган",
+  "rVegetarian": "Вегетарианец",
+  "rNoAlcohol": "Без алкоголя",
+  "rNoCaffeine": "Без кофеина",
+  "rAllergyNuts": "Аллергия на орехи",
+  "rHypertension": "Гипертония",
+  "surveyBody": "Параметры тела",
+  "surveyWeight": "Вес (кг)",
+  "surveyHeight": "Рост (см)",
+  "surveyStress": "Уровень стресса",
+  "stressLow": "Низкий",
+  "stressMedium": "Средний",
+  "stressHigh": "Высокий",
+  "surveySleep": "Качество сна",
+  "sleepPoor": "Плохой",
+  "sleepAverage": "Средний",
+  "sleepGood": "Хороший",
+  "planTomorrow": "План на завтра",
+  "close": "Закрыть",
+  "newFeatureTitle": "",
+  "newFeatureDesc": "",
+  "planToday": "",
+  "catalogTasks": "",
+  "addToPlan": "",
+  "addedToPlan": "",
+  "devTestMessage": "",
+  "testAuto": "",
+  "aiPlan": "AI plan"
+}

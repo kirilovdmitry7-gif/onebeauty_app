@@ -1,0 +1,154 @@
+{
+  "appTitle": "OneBeauty",
+  "tabHealth": "Salud",
+  "tabStudio": "Estudio",
+  "tabStore": "Tienda",
+  "signOut": "Cerrar sesión",
+  "saved": "Guardado",
+  "save": "Guardar",
+  "language": "Idioma",
+  "profileTitle": "Perfil",
+  "profileEmail": "Correo",
+  "profilePhone": "Teléfono",
+  "profileDisplayName": "Nombre visible",
+  "profileAccount": "Cuenta",
+  "obHealthTitle": "Salud diaria",
+  "obHealthText": "Marca agua, pasos y sueño con metas simples.",
+  "obStudioTitle": "Estudio",
+  "obStudioText": "Reserva sesiones y organiza tu agenda.",
+  "obStoreTitle": "Tienda",
+  "obStoreText": "Compra productos de cuidado en un solo lugar.",
+  "obSkip": "Omitir",
+  "obNext": "Siguiente",
+  "obStart": "Empezar",
+  "authTitle": "Entrar / Registro",
+  "authLoginTab": "Entrar",
+  "authRegisterTab": "Registrar",
+  "authPhoneTab": "Teléfono",
+  "authContinueGoogle": "Continuar con Google",
+  "authEmail": "Correo",
+  "authPassword": "Contraseña",
+  "authSignIn": "Entrar",
+  "authCreateAccount": "Crear cuenta",
+  "authPhone": "Número de teléfono",
+  "authCodeHint": "Código de verificación",
+  "authSendCode": "Enviar código",
+  "greetHello": "¡Hola! 👋",
+  "greetHelloName": "¡Hola, {name}! 👋",
+  "@greetHelloName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "goalHintHealth": "Pequeños pasos diarios: agua, pasos, sueño.",
+  "goalHintSkin": "Pronto: seguimiento del cuidado de la piel y consejos.",
+  "goalHintFitness": "Mantén la actividad: pasos, estiramientos, sueño.",
+  "healthResetTooltip": "Reiniciar comprobaciones de hoy",
+  "surveyTitle": "Cuestionario de salud",
+  "surveyIntro": "Toma menos de un minuto y ayuda a personalizar recomendaciones.",
+  "surveyBirthDate": "Fecha de nacimiento",
+  "surveyPickDate": "Elegir fecha",
+  "surveyGender": "Género",
+  "surveyMale": "Hombre",
+  "surveyFemale": "Mujer",
+  "surveyOther": "Otro",
+  "surveyGoal": "Objetivo principal",
+  "surveyGoalHealth": "Salud general",
+  "surveyGoalSkin": "Cuidado de la piel",
+  "surveyGoalFitness": "Forma física",
+  "surveySaveContinue": "Guardar y continuar",
+  "surveyErrorFillAll": "Por favor, completa todos los campos",
+  "studioMessage": "El Estudio estará disponible pronto.",
+  "storeMessage": "La Tienda estará disponible pronto.",
+  "taskWater": "Bebe 8 vasos de agua 💧",
+  "taskSteps": "Camina 6–8 mil pasos 🚶",
+  "taskSleep": "Acuéstate antes de las 23:00 😴",
+  "taskStretch": "Estiramiento 5–10 min 🤸",
+  "taskMind": "5 min de atención plena 🧘",
+  "authErrEmailPasswordRequired": "Se requieren correo y contraseña",
+  "authErrPhoneCodeRequired": "Se requieren teléfono y código",
+  "authErrInvalidCode": "Código inválido (usa 0000)",
+  "healthBannerText": "¡Hola! 👋 Pronto añadiremos un rastreador de cuidado de la piel y recomendaciones.",
+  "resetToday": "Restablecer marcados de hoy",
+  "healthProgress": "{done} de {total} completado",
+  "@healthProgress": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "healthAllDone": "¡Todo listo por hoy! 🎉",
+  "streakTitle": "Tu racha",
+  "streakDays": "{days} días seguidos",
+  "@streakDays": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "healthWeekTitle": "Esta semana",
+  "healthDayDone": "{done}/{total}",
+  "@healthDayDone": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "surveyNext": "Siguiente",
+  "surveyBack": "Atrás",
+  "surveySave": "Guardar",
+  "surveyAge": "Edad",
+  "surveyFitness": "Nivel físico",
+  "surveyBeginner": "Principiante",
+  "surveyIntermediate": "Intermedio",
+  "surveyAdvanced": "Avanzado",
+  "surveyGoals": "Objetivos",
+  "goalWeightLoss": "Pérdida de peso",
+  "goalBetterSleep": "Mejor sueño",
+  "goalEnergy": "Más energía",
+  "goalDiscipline": "Disciplina",
+  "goalStress": "Menos estrés",
+  "surveyLifestyle": "Estilo de vida",
+  "lifestyleSedentary": "Sedentario",
+  "lifestyleActive": "Activo",
+  "surveyRestrictions": "Restricciones",
+  "rVegan": "Vegano",
+  "rVegetarian": "Vegetariano",
+  "rNoAlcohol": "Sin alcohol",
+  "rNoCaffeine": "Sin cafeína",
+  "rAllergyNuts": "Alergia a frutos secos",
+  "rHypertension": "Hipertensión",
+  "surveyBody": "Parámetros corporales",
+  "surveyWeight": "Peso (kg)",
+  "surveyHeight": "Altura (cm)",
+  "surveyStress": "Nivel de estrés",
+  "stressLow": "Bajo",
+  "stressMedium": "Medio",
+  "stressHigh": "Alto",
+  "surveySleep": "Calidad del sueño",
+  "sleepPoor": "Mala",
+  "sleepAverage": "Regular",
+  "sleepGood": "Buena",
+  "planTomorrow": "Plan para mañana",
+  "close": "Cerrar",
+  "newFeatureTitle": "Awesome new feature",
+  "newFeatureDesc": "Try our AI-based challenge generator!",
+  "planToday": "Plan for today",
+  "aiPlan": "AI plan",
+  "catalogTasks": "Today's tasks",
+  "addToPlan": "Add to plan",
+  "addedToPlan": "Added to plan",
+  "devTestMessage": "Localization pipeline works!",
+  "testAuto": "Hello world"
+}
