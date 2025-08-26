@@ -21,7 +21,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.0'   # под это мы понизили Dart SDK до 3.5.x
+          flutter-version: '3.24.0'
 
       - name: Flutter doctor (debug)
         run: flutter doctor -v
@@ -32,14 +32,10 @@ jobs:
       - name: Build Flutter Web (release)
         run: flutter build web --release
 
-      # Можно удалить, но полезно увидеть, что именно мы отправляем на Vercel
       - name: List build output
         run: ls -la build/web
 
-      - name: Deploy to Vercel
+      - name: Deploy to Vercel (personal account: no --scope)
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-        # Деплоим как статический сайт напрямую из build/web
-        run: npx vercel --prod --yes --confirm ./build/web --token=$VERCEL_TOKEN --scope=$VERCEL_ORG_ID
+        run: npx vercel --prod --yes --confirm ./build/web --token=$VERCEL_TOKEN
