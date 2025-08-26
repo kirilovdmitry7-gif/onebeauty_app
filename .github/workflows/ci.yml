@@ -34,7 +34,7 @@ jobs:
         run: flutter build web --release
 
       - name: Vercel pull (link project)
-        run: npx vercel pull --yes --environment=production
+        run: npx vercel pull --yes --environment=production --token=$VERCEL_TOKEN
 
       - name: Prepare prebuilt output
         run: |
@@ -44,4 +44,4 @@ jobs:
           cp -R build/web/* .vercel/output/static/
 
       - name: Deploy prebuilt to Vercel
-        run: npx vercel deploy --prebuilt --prod --yes
+        run: npx vercel deploy --prebuilt --prod --yes --token=$VERCEL_TOKEN
