@@ -2,8 +2,8 @@
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -11,32 +11,35 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
+      - name: Set up Node (for npx vercel)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.24.0"
+          flutter-version: '3.24.0'   # под это мы понизили Dart SDK до 3.5.x
 
       - name: Flutter doctor (debug)
-        run: flutter --version
+        run: flutter doctor -v
 
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Build Flutter Web
+      - name: Build Flutter Web (release)
         run: flutter build web --release
 
-      # Главное изменение — используем ENV и новую схему CLI
+      # Можно удалить, но полезно увидеть, что именно мы отправляем на Vercel
+      - name: List build output
+        run: ls -la build/web
+
       - name: Deploy to Vercel
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-        run: |
-          # подтягиваем конфиг проекта с Vercel (environment=production)
-          npx vercel pull --yes --environment=production
-          # собираем prebuilt артефакт (Vercel CLI создаст .vercel/output)
-          npx vercel build
-          # деплоим уже собранное (без дополнительного билда на стороне Vercel)
-          npx vercel deploy --prebuilt --prod --yes
+        # Деплоим как статический сайт напрямую из build/web
+        run: npx vercel --prod --yes --confirm ./build/web --token=$VERCEL_TOKEN --scope=$VERCEL_ORG_ID
