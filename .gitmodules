@@ -1,0 +1,3 @@
+[submodule "onebeauty_ai_proxy"]
+	path = onebeauty_ai_proxy
+	url = https://github.com/kirilovdmitry7-gif/onebeauty_ai_proxy.git
