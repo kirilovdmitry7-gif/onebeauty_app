@@ -8,11 +8,16 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Node (for npx vercel)
+      - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version: '18'
@@ -22,19 +27,21 @@ jobs:
         with:
           flutter-version: '3.24.0'
 
-      - name: Flutter doctor (debug)
-        run: flutter doctor -v
-
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Build Flutter Web (release)
+      - name: Build Flutter web (release)
         run: flutter build web --release
 
-      - name: List build output
-        run: ls -la build/web
+      - name: Vercel pull (link project)
+        run: npx vercel pull --yes --environment=production
 
-      - name: Deploy to Vercel (personal account: no --scope)
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        run: npx vercel deploy --prod --yes --confirm ./build/web --token="$VERCEL_TOKEN"
+      - name: Prepare prebuilt output
+        run: |
+          rm -rf .vercel/output
+          mkdir -p .vercel/output/static
+          echo '{ "version": 3 }' > .vercel/output/config.json
+          cp -R build/web/* .vercel/output/static/
+
+      - name: Deploy prebuilt to Vercel
+        run: npx vercel deploy --prebuilt --prod --yes
