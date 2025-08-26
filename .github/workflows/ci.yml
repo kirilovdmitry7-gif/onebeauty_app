@@ -8,7 +8,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -38,45 +37,4 @@ jobs:
       - name: Deploy to Vercel (personal account: no --scope)
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        run: npx vercel --prod --yes --confirm ./build/web --token=$VERCEL_TOKEN
-name: Deploy to Vercel
-
-on:
-  push:
-    branches: [main]
-  workflow_dispatch:
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Node (for npx vercel)
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.24.0'
-
-      - name: Flutter doctor (debug)
-        run: flutter doctor -v
-
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Build Flutter Web (release)
-        run: flutter build web --release
-
-      - name: List build output
-        run: ls -la build/web
-
-      - name: Deploy to Vercel (personal account: no --scope)
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        run: npx vercel --prod --yes --confirm ./build/web --token=$VERCEL_TOKEN
+        run: npx vercel deploy --prod --yes --confirm ./build/web --token="$VERCEL_TOKEN"
