@@ -6,7 +6,7 @@ import '../profile/user_profile_service.dart';
 import '../ai/ai_task_generator.dart';
 import '../plan/daily_plan_service.dart';
 import 'package:onebeauty_clean/core/ai/ai_client.dart';
-import 'health_stats_screen.dart'; // 👈 добавили
+import 'health_stats_screen.dart'; //
 
 class HealthScreen extends StatefulWidget {
   const HealthScreen({super.key});
@@ -333,8 +333,8 @@ class _HealthScreenState extends State<HealthScreen> {
             // План ИИ
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child:
-                  Text(loc.aiPlan, style: Theme.of(context).textTheme.titleMedium),
+              child: Text(loc.aiPlan,
+                  style: Theme.of(context).textTheme.titleMedium),
             ),
             const SizedBox(height: 8),
             if (_planLoading)
@@ -344,7 +344,8 @@ class _HealthScreenState extends State<HealthScreen> {
               )
             else if (_plan.isEmpty)
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: Text(
                   '—',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
