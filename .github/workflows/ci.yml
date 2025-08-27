@@ -30,8 +30,8 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Build Flutter web (release)
-        run: flutter build web --release
+      - name: Build Flutter Web (release, no service worker)
+        run: flutter build web --release --pwa-strategy=none
 
       - name: Vercel pull (link project)
         run: npx vercel pull --yes --environment=production --token=$VERCEL_TOKEN
