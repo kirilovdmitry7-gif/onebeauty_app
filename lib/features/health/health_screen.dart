@@ -6,6 +6,7 @@ import '../profile/user_profile_service.dart';
 import '../ai/ai_task_generator.dart';
 import '../plan/daily_plan_service.dart';
 import 'package:onebeauty_clean/core/ai/ai_client.dart';
+import 'health_stats_screen.dart'; // 👈 добавили
 
 class HealthScreen extends StatefulWidget {
   const HealthScreen({super.key});
@@ -114,7 +115,6 @@ class _HealthScreenState extends State<HealthScreen> {
       'advanced' => 3,
       _ => 1,
     };
-
     final cats = {'water', 'activity', 'mind', 'care', 'productivity'};
     final recent = _tasks.map((t) => _titleForTask(loc, t.id)).toList();
     final forDay = DateTime.now();
@@ -140,7 +140,8 @@ class _HealthScreenState extends State<HealthScreen> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(loc.planToday, style: Theme.of(context).textTheme.titleLarge),
+              Text('План на сегодня',
+                  style: Theme.of(context).textTheme.titleLarge),
               const SizedBox(height: 12),
               ...suggestions.map((s) => ListTile(
                     leading: const Icon(Icons.auto_awesome),
@@ -153,7 +154,7 @@ class _HealthScreenState extends State<HealthScreen> {
                 children: [
                   TextButton(
                     onPressed: () => Navigator.pop(context),
-                    child: Text(loc.close),
+                    child: const Text('Закрыть'),
                   ),
                   const Spacer(),
                   FilledButton.icon(
@@ -170,11 +171,11 @@ class _HealthScreenState extends State<HealthScreen> {
                       Navigator.pop(context);
                       await _loadPlanToday();
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(loc.addedToPlan)),
+                        const SnackBar(content: Text('Добавлено в план')),
                       );
                     },
                     icon: const Icon(Icons.add_task),
-                    label: Text(loc.addToPlan),
+                    label: const Text('Добавить в план'),
                   ),
                 ],
               ),
@@ -208,14 +209,12 @@ class _HealthScreenState extends State<HealthScreen> {
     final progress = total == 0 ? 0.0 : done / total;
 
     return Scaffold(
-      // ВАЖНО: убрали title у AppBar, чтобы не было дублирования «Health»
-      appBar: AppBar(),
       body: RefreshIndicator(
         onRefresh: () async => _loadAll(),
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            // Баннер + действия
+            // Баннер + иконки
             Padding(
               padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
               child: Material(
@@ -234,11 +233,18 @@ class _HealthScreenState extends State<HealthScreen> {
                         ),
                       ),
                       IconButton(
+                        tooltip: 'Статистика',
+                        onPressed: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: (_) => const HealthStatsScreen()),
+                        ),
+                        icon: const Icon(Icons.insights),
+                      ),
+                      IconButton(
                         tooltip: loc.surveyTitle,
                         onPressed: () => Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (_) => const SurveyScreen(),
-                          ),
+                              builder: (_) => const SurveyScreen()),
                         ),
                         icon: const Icon(Icons.account_circle),
                       ),
@@ -296,13 +302,11 @@ class _HealthScreenState extends State<HealthScreen> {
             ),
             const SizedBox(height: 12),
 
-            // Каталог задач (ручные)
+            // Каталог задач
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Text(
-                loc.catalogTasks,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
+              child: Text(loc.catalogTasks,
+                  style: Theme.of(context).textTheme.titleMedium),
             ),
             const SizedBox(height: 8),
             if (_loading)
@@ -329,10 +333,8 @@ class _HealthScreenState extends State<HealthScreen> {
             // План ИИ
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Text(
-                loc.aiPlan,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
+              child:
+                  Text(loc.aiPlan, style: Theme.of(context).textTheme.titleMedium),
             ),
             const SizedBox(height: 8),
             if (_planLoading)
@@ -342,8 +344,7 @@ class _HealthScreenState extends State<HealthScreen> {
               )
             else if (_plan.isEmpty)
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: Text(
                   '—',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -363,8 +364,7 @@ class _HealthScreenState extends State<HealthScreen> {
                   },
                   title: Text(item.title),
                   subtitle: Text(
-                    'Категория: ${item.category} • Уровень: ${item.level}',
-                  ),
+                      'Категория: ${item.category} • Уровень: ${item.level}'),
                 );
               }),
 
