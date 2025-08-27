@@ -27,10 +27,9 @@ class _HealthScreenState extends State<HealthScreen> {
 
   // Профиль + генератор задач
   final _profileSvc = UserProfileService();
-  // ↓ используем реальный генератор через локальный прокси
   final AiTaskGenerator _ai = ApiAiTaskGenerator(AiClient());
 
-  // Клиент к локальному прокси OpenAI (для пинга)
+  // Клиент к прокси (пинг)
   final AiClient _aiClient = AiClient();
 
   @override
@@ -115,6 +114,7 @@ class _HealthScreenState extends State<HealthScreen> {
       'advanced' => 3,
       _ => 1,
     };
+
     final cats = {'water', 'activity', 'mind', 'care', 'productivity'};
     final recent = _tasks.map((t) => _titleForTask(loc, t.id)).toList();
     final forDay = DateTime.now();
@@ -158,7 +158,14 @@ class _HealthScreenState extends State<HealthScreen> {
                   const Spacer(),
                   FilledButton.icon(
                     onPressed: () async {
-                      await _planSvc.addMany(forDay, suggestions);
+                      final toSave = suggestions
+                          .map((s) => PlannedTask(
+                                title: s.title,
+                                category: s.category,
+                                level: s.level,
+                              ))
+                          .toList();
+                      await _planSvc.addMany(forDay, toSave);
                       if (!mounted) return;
                       Navigator.pop(context);
                       await _loadPlanToday();
@@ -201,24 +208,16 @@ class _HealthScreenState extends State<HealthScreen> {
     final progress = total == 0 ? 0.0 : done / total;
 
     return Scaffold(
+      // ВАЖНО: убрали title у AppBar, чтобы не было дублирования «Health»
+      appBar: AppBar(),
       body: RefreshIndicator(
         onRefresh: () async => _loadAll(),
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            // Заголовок
+            // Баннер + действия
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-              child: Text(
-                loc.tabHealth,
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
-            ),
-            const SizedBox(height: 8),
-
-            // Баннер + иконки
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
+              padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
               child: Material(
                 color: Colors.pink.withOpacity(.12),
                 borderRadius: BorderRadius.circular(12),
@@ -234,7 +233,6 @@ class _HealthScreenState extends State<HealthScreen> {
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ),
-                      // 👤 Анкета
                       IconButton(
                         tooltip: loc.surveyTitle,
                         onPressed: () => Navigator.of(context).push(
@@ -244,19 +242,16 @@ class _HealthScreenState extends State<HealthScreen> {
                         ),
                         icon: const Icon(Icons.account_circle),
                       ),
-                      // 💡 ИИ план
                       IconButton(
                         tooltip: loc.planToday,
                         onPressed: () => _openAiSuggestions(loc),
                         icon: const Icon(Icons.lightbulb),
                       ),
-                      // 🤖 Пинг прокси (диагностика)
                       IconButton(
                         tooltip: 'AI тест',
                         onPressed: _aiPing,
                         icon: const Icon(Icons.smart_toy),
                       ),
-                      // 🔄 Сбросить каталог на сегодня
                       IconButton(
                         tooltip: loc.resetToday,
                         onPressed: _loading ? null : _resetToday,
@@ -301,11 +296,13 @@ class _HealthScreenState extends State<HealthScreen> {
             ),
             const SizedBox(height: 12),
 
-            // Секция: Задачи дня (каталог)
+            // Каталог задач (ручные)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child:
-                  Text(loc.catalogTasks, style: Theme.of(context).textTheme.titleMedium),
+              child: Text(
+                loc.catalogTasks,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
             ),
             const SizedBox(height: 8),
             if (_loading)
@@ -329,10 +326,13 @@ class _HealthScreenState extends State<HealthScreen> {
 
             const SizedBox(height: 16),
 
-            // Секция: План (ИИ)
+            // План ИИ
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Text(loc.aiPlan, style: Theme.of(context).textTheme.titleMedium),
+              child: Text(
+                loc.aiPlan,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
             ),
             const SizedBox(height: 8),
             if (_planLoading)
@@ -342,7 +342,8 @@ class _HealthScreenState extends State<HealthScreen> {
               )
             else if (_plan.isEmpty)
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: Text(
                   '—',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -361,8 +362,9 @@ class _HealthScreenState extends State<HealthScreen> {
                     _togglePlanItem(index, v);
                   },
                   title: Text(item.title),
-                  subtitle:
-                      Text('Категория: ${item.category} • Уровень: ${item.level}'),
+                  subtitle: Text(
+                    'Категория: ${item.category} • Уровень: ${item.level}',
+                  ),
                 );
               }),
 

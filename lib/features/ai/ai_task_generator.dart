@@ -1,171 +1,195 @@
 import 'dart:convert';
+import '../plan/daily_plan_service.dart';
+import '../profile/user_profile_service.dart';
 import 'package:onebeauty_clean/core/ai/ai_client.dart';
-import 'package:onebeauty_clean/features/plan/daily_plan_service.dart';
-import 'package:onebeauty_clean/features/profile/user_profile_service.dart';
 
-/// Единый интерфейс генерации задач
+/// Интерфейс генератора задач
 abstract class AiTaskGenerator {
-  Future<List<DailyPlanItem>> generate({
+  Future<List<PlannedTask>> generate({
     required String locale,
     required int level, // 1..3
-    required Set<String> enabledCats, // water, activity, mind, care, productivity
-    required DateTime forDay,
-    required List<String> recentTitles, // чтобы избегать повторов
-    required UserProfile profile,
-    int count = 5,
-  });
-}
-
-/// Простой мок – на случай офлайна ИИ (оставим как fallback)
-class MockAiTaskGenerator implements AiTaskGenerator {
-  @override
-  Future<List<DailyPlanItem>> generate({
-    required String locale,
-    required int level,
     required Set<String> enabledCats,
     required DateTime forDay,
     required List<String> recentTitles,
     required UserProfile profile,
-    int count = 5,
-  }) async {
-    final now = DateTime.now().millisecondsSinceEpoch;
-    final cats = enabledCats.isEmpty
-        ? const ['water', 'activity', 'mind', 'care', 'productivity']
-        : enabledCats.toList();
-
-    final List<DailyPlanItem> out = [];
-    for (int i = 0; i < count; i++) {
-      final c = cats[i % cats.length];
-      final id = 'ai_${now}_$i';
-      final title = switch (c) {
-        'water' => locale.startsWith('ru') ? 'Стакан воды' : 'Drink a glass of water',
-        'activity' => locale.startsWith('ru') ? '10 минут прогулки' : '10-minute walk',
-        'mind' => locale.startsWith('ru') ? '1 мин дыхания' : '1-min breathing',
-        'care' => locale.startsWith('ru') ? 'Растяжка шеи' : 'Neck stretch',
-        _ => locale.startsWith('ru') ? 'Мини-задача' : 'Mini task',
-      };
-      out.add(DailyPlanItem(
-        id: id,
-        title: title,
-        category: c,
-        level: level,
-        done: false,
-      ));
-    }
-    return out;
-  }
+    required int count,
+  });
 }
 
-/// Реальная генерация через локальный прокси OpenAI
+/// Реализация через наш прокси OpenAI
 class ApiAiTaskGenerator implements AiTaskGenerator {
   final AiClient _client;
   ApiAiTaskGenerator(this._client);
 
   @override
-  Future<List<DailyPlanItem>> generate({
+  Future<List<PlannedTask>> generate({
     required String locale,
     required int level,
     required Set<String> enabledCats,
     required DateTime forDay,
     required List<String> recentTitles,
     required UserProfile profile,
-    int count = 5,
+    required int count,
   }) async {
-    final safe = {
-      'age': profile.age,
-      'gender': profile.gender,
-      'fitnessLevel': profile.fitnessLevel,
-      'goals': profile.goals,
+    // Жесткие нормы для шагов (чтобы не было 6–8k и т. п.)
+    final stepsTarget = switch (level) {
+      <= 1 => 6000,
+      2 => 8000,
+      _ => 10000,
     };
 
-    final sys = '''
-You are a wellness coach. Return ONLY valid minified JSON with an array "items".
-Each item: { "title": string, "category": "water|activity|mind|care|productivity", "level": 1|2|3 }.
-No explanations. Language: $locale.
-'''.trim();
-
+    final system =
+        'You are a concise wellness coach. Return JSON only. No prose.';
     final user = jsonEncode({
-      'date': forDay.toIso8601String(),
       'locale': locale,
-      'level': level,
-      'enabledCats': enabledCats.toList(),
+      'day': forDay.toIso8601String(),
+      'profile': {
+        'age': profile.age,
+        'fitnessLevel': profile.fitnessLevel,
+        'goals': profile.goals,
+      },
+      'enabledCategories': enabledCats.toList(),
       'recentTitles': recentTitles,
-      'profile': safe,
-      'count': count,
+      'constraints': {
+        // ⛔️ никаких диапазонов — только конкретика
+        'no_ranges': true,
+        'steps_target': stepsTarget,
+        'max_items': count,
+        'title_rules': [
+          'Write concrete, single-target actions, no "~", "about", "6-8k" etc.',
+          'Prefer numbers with units: "7,000 steps", "20 min stretch", "2L water".',
+          'Keep titles short, imperative, human readable.',
+        ],
+        'level_meaning': {
+          '1': 'beginner',
+          '2': 'intermediate',
+          '3': 'advanced',
+        }
+      },
+      'schema': {
+        'type': 'array',
+        'items': {
+          'type': 'object',
+          'required': ['title', 'category', 'level'],
+          'properties': {
+            'title': {'type': 'string'},
+            'category': {
+              'type': 'string',
+              'enum': enabledCats.toList(),
+            },
+            'level': {'type': 'integer', 'minimum': 1, 'maximum': 3}
+          }
+        }
+      }
     });
 
-    final raw = await _client.chat(system: sys, user: user);
+    final raw = await _client.chat(
+      system: system,
+      user: 'Generate up to $count items matching the JSON schema: $user',
+      locale: locale,
+    );
 
-    Map<String, dynamic> parsed;
+    // Парсинг JSON (может прийти с оберткой) + санитайзинг
+    final List<dynamic> data = _extractArraySafe(raw);
+    final items = <PlannedTask>[];
+
+    for (final e in data) {
+      if (e is! Map) continue;
+      final title0 = (e['title'] ?? '').toString();
+      final category = (e['category'] ?? '').toString();
+      final lvl = int.tryParse('${e['level']}') ?? level;
+
+      if (title0.trim().isEmpty || !enabledCats.contains(category)) continue;
+
+      final title = _normalizeTitle(title0, stepsTarget: stepsTarget);
+      items.add(PlannedTask(title: title, category: category, level: lvl.clamp(1, 3)));
+    }
+
+    // Дедупликация по нормализованному заголовку и обрезка до count
+    final seen = <String>{};
+    final unique = <PlannedTask>[];
+    for (final t in items) {
+      final k = _normKey(t.title);
+      if (k.isEmpty || seen.contains(k)) continue;
+      seen.add(k);
+      unique.add(t);
+      if (unique.length >= count) break;
+    }
+
+    // Фолбэк если модель не дала ничего
+    if (unique.isEmpty) {
+      return [
+        PlannedTask(
+            title: 'Drink 2L water', category: 'water', level: level),
+        PlannedTask(
+            title: 'Walk $stepsTarget steps', category: 'activity', level: level),
+        PlannedTask(
+            title: '10 min stretch', category: 'care', level: level),
+        PlannedTask(
+            title: '5 min mindfulness', category: 'mind', level: level),
+      ].take(count).toList();
+    }
+    return unique;
+  }
+
+  // --- Вспомогательные ---
+
+  List<dynamic> _extractArraySafe(String raw) {
     try {
-      parsed = jsonDecode(_extractJson(raw));
-    } catch (_) {
-      return MockAiTaskGenerator().generate(
-        locale: locale,
-        level: level,
-        enabledCats: enabledCats,
-        forDay: forDay,
-        recentTitles: recentTitles,
-        profile: profile,
-        count: count,
-      );
+      final j = jsonDecode(raw);
+      if (j is List) return j;
+      if (j is Map && j['items'] is List) return j['items'];
+    } catch (_) {}
+    // Попытка вытащить JSON массив из текста
+    final start = raw.indexOf('[');
+    final end = raw.lastIndexOf(']');
+    if (start >= 0 && end > start) {
+      try {
+        return (jsonDecode(raw.substring(start, end + 1)) as List);
+      } catch (_) {}
     }
-
-    final list = (parsed['items'] as List?) ?? const [];
-    final now = DateTime.now().millisecondsSinceEpoch;
-
-    final out = <DailyPlanItem>[];
-    for (int i = 0; i < list.length; i++) {
-      final m = list[i];
-      if (m is! Map) continue;
-      final title = _asString(m['title']);
-      final cat = _asString(m['category']);
-      final lvl = _asInt(m['level']) ?? level;
-
-      if (title == null || title.isEmpty) continue;
-      if (cat == null || !_isAllowedCategory(cat)) continue;
-
-      final id = 'ai_${now}_$i';
-      out.add(DailyPlanItem(
-        id: id,
-        title: title,
-        category: cat, // <-- non-null после проверки
-        level: lvl.clamp(1, 3),
-        done: false,
-      ));
-    }
-
-    if (out.isEmpty) {
-      return MockAiTaskGenerator().generate(
-        locale: locale,
-        level: level,
-        enabledCats: enabledCats,
-        forDay: forDay,
-        recentTitles: recentTitles,
-        profile: profile,
-        count: count,
-      );
-    }
-    return out;
+    return const [];
   }
 
-  String _extractJson(String s) {
-    final start = s.indexOf('{');
-    final end = s.lastIndexOf('}');
-    if (start >= 0 && end > start) return s.substring(start, end + 1);
-    return s;
-  }
+  String _normKey(String s) =>
+      s.toLowerCase().trim().replaceAll(RegExp(r'\s+'), ' ');
 
-  String? _asString(dynamic v) => v is String ? v : null;
-  int? _asInt(dynamic v) {
-    if (v is int) return v;
-    if (v is num) return v.toInt();
-    if (v is String) return int.tryParse(v);
-    return null;
-  }
+  /// Нормализация заголовков:
+  /// - убираем диапазоны «6–8k»/«6-8k» → берём конкретное число (среднее)
+  /// - приводим «k/тыс.» к числу
+  /// - подставляем шаги фиксированным таргетом, если в тексте есть «steps» и диапазон
+  String _normalizeTitle(String title, {required int stepsTarget}) {
+    var t = title.trim();
 
-  bool _isAllowedCategory(String c) { // <- принимает String, не String?
-    const allowed = {'water', 'activity', 'mind', 'care', 'productivity'};
-    return allowed.contains(c);
+    // Унификация разделителей диапазонов
+    t = t.replaceAll('–', '-').replaceAll('—', '-');
+
+    // Если упомянуты steps и есть диапазон — жёстко ставим stepsTarget
+    final stepsRegex = RegExp(r'(\d+)\s*-\s*(\d+)\s*[kK]?\s*steps');
+    if (stepsRegex.hasMatch(t)) {
+      return t.replaceAll(stepsRegex, '${(stepsTarget / 1000).toStringAsFixed(0)}k steps')
+              .replaceAll('k steps', '000 steps'); // 8k → 8000
+    }
+
+    // Общая нормализация диапазонов: «6-8k», «20-30 min»
+    t = t.replaceAllMapped(RegExp(r'(\d+)\s*-\s*(\d+)\s*([a-zA-ZкК]+)?'), (m) {
+      final a = int.tryParse(m.group(1)!) ?? 0;
+      final b = int.tryParse(m.group(2)!) ?? a;
+      final unit = (m.group(3) ?? '').trim();
+      final v = ((a + b) / 2).round(); // берём среднее
+      // k → тысяча
+      if (unit.toLowerCase().startsWith('k')) {
+        return '${v}k';
+      }
+      return '$v ${unit.isEmpty ? '' : unit}';
+    });
+
+    // Преобразуем «7k steps» → «7000 steps»
+    t = t.replaceAllMapped(RegExp(r'(\d+)\s*[kK]\s*steps'), (m) {
+      final v = int.tryParse(m.group(1)!) ?? 0;
+      return '${v * 1000} steps';
+    });
+
+    return t;
   }
 }

@@ -1,37 +1,28 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// Модель пункта плана на день (то, что генерит ИИ)
 class DailyPlanItem {
-  final String id;        // стабильный id (например, хэш от title)
-  final String title;     // текст задачи
-  final String category;  // water | activity | mind | care | productivity
-  final int level;        // 1..3
+  final String id;
+  final String title;
+  final String category;
+  final int level;
   final bool done;
 
-  const DailyPlanItem({
+  DailyPlanItem({
     required this.id,
     required this.title,
     required this.category,
     required this.level,
-    this.done = false,
+    required this.done,
   });
 
-  DailyPlanItem copyWith({
-    String? id,
-    String? title,
-    String? category,
-    int? level,
-    bool? done,
-  }) {
-    return DailyPlanItem(
-      id: id ?? this.id,
-      title: title ?? this.title,
-      category: category ?? this.category,
-      level: level ?? this.level,
-      done: done ?? this.done,
-    );
-  }
+  DailyPlanItem copyWith({bool? done}) => DailyPlanItem(
+        id: id,
+        title: title,
+        category: category,
+        level: level,
+        done: done ?? this.done,
+      );
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -41,73 +32,107 @@ class DailyPlanItem {
         'done': done,
       };
 
-  static DailyPlanItem fromJson(Map<String, dynamic> m) => DailyPlanItem(
-        id: (m['id'] ?? '').toString(),
-        title: (m['title'] ?? '').toString(),
-        category: (m['category'] ?? '').toString(),
-        level: int.tryParse((m['level'] ?? '1').toString()) ?? 1,
-        done: m['done'] == true,
+  static DailyPlanItem fromJson(Map<String, dynamic> j) => DailyPlanItem(
+        id: j['id'] as String,
+        title: j['title'] as String,
+        category: j['category'] as String,
+        level: (j['level'] as num).toInt(),
+        done: j['done'] as bool? ?? false,
       );
 }
 
+class PlannedTask {
+  final String title;
+  final String category;
+  final int level;
+
+  PlannedTask({
+    required this.title,
+    required this.category,
+    required this.level,
+  });
+}
+
 class DailyPlanService {
-  static String _keyForDay(DateTime day) {
-    final y = day.year.toString().padLeft(4, '0');
-    final m = day.month.toString().padLeft(2, '0');
-    final d = day.day.toString().padLeft(2, '0');
-    return 'daily_plan_${y}${m}${d}';
+  static const _kPlanPrefix = 'plan_'; // + yyyymmdd
+  static const _kLastPlanDate = 'last_plan_date'; // yyyy-mm-dd
+
+  String _keyFor(DateTime day) {
+    final d =
+        '${day.year.toString().padLeft(4, '0')}${day.month.toString().padLeft(2, '0')}${day.day.toString().padLeft(2, '0')}';
+    return '$_kPlanPrefix$d';
   }
+
+  String _dateStamp(DateTime day) =>
+      '${day.year.toString().padLeft(4, '0')}-${day.month.toString().padLeft(2, '0')}-${day.day.toString().padLeft(2, '0')}';
+
+  // -------- CRUD --------
 
   Future<List<DailyPlanItem>> load(DateTime day) async {
     final prefs = await SharedPreferences.getInstance();
-    final key = _keyForDay(day);
-    final raw = prefs.getStringList(key) ?? <String>[];
-    return raw
-        .map((s) => jsonDecode(s))
-        .whereType<Map<String, dynamic>>()
+    final raw = prefs.getString(_keyFor(day));
+    if (raw == null) return const [];
+    final list = (jsonDecode(raw) as List)
+        .cast<Map<String, dynamic>>()
         .map(DailyPlanItem.fromJson)
-        .toList(growable: false);
+        .toList();
+    return list;
+  }
+
+  Future<void> save(DateTime day, List<DailyPlanItem> items) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(
+      _keyFor(day),
+      jsonEncode(items.map((e) => e.toJson()).toList()),
+    );
   }
 
   Future<void> toggle(DateTime day, String id, bool value) async {
-    final prefs = await SharedPreferences.getInstance();
-    final key = _keyForDay(day);
-    final list = prefs.getStringList(key) ?? <String>[];
-    final items = list
-        .map((s) => jsonDecode(s))
-        .whereType<Map<String, dynamic>>()
-        .map(DailyPlanItem.fromJson)
-        .toList();
-
-    final idx = items.indexWhere((e) => e.id == id);
-    if (idx >= 0) {
-      items[idx] = items[idx].copyWith(done: value);
-      final out = items.map((e) => jsonEncode(e.toJson())).toList();
-      await prefs.setStringList(key, out);
-    }
+    final list = await load(day);
+    final updated = [
+      for (final it in list) it.id == id ? it.copyWith(done: value) : it
+    ];
+    await save(day, updated);
   }
 
-  /// Добавить много элементов разом (используем для «Добавить в план»).
-  Future<void> addMany(DateTime day, List<DailyPlanItem> tasks) async {
-    if (tasks.isEmpty) return;
+  // Добавление пакета задач с дедупликацией по нормализованному title.
+  Future<void> addMany(DateTime day, List<PlannedTask> tasks) async {
+    final existing = await load(day);
+    final existSet = existing.map((e) => _norm(e.title)).toSet();
+
+    final toAdd = <DailyPlanItem>[];
+    for (final t in tasks) {
+      final norm = _norm(t.title);
+      if (norm.isEmpty || existSet.contains(norm)) continue;
+      existSet.add(norm);
+      toAdd.add(
+        DailyPlanItem(
+          id: 'p_${day.millisecondsSinceEpoch}_${toAdd.length}',
+          title: t.title.trim(),
+          category: t.category,
+          level: t.level,
+          done: false,
+        ),
+      );
+    }
+
+    if (toAdd.isEmpty) return;
+    final merged = [...existing, ...toAdd];
+    await save(day, merged);
+  }
+
+  String _norm(String s) =>
+      s.toLowerCase().trim().replaceAll(RegExp(r'\s+'), ' ');
+
+  // -------- Метаданные (дата последней сборки) --------
+
+  Future<String?> getLastPlanDate() async {
     final prefs = await SharedPreferences.getInstance();
-    final key = _keyForDay(day);
-    final list = prefs.getStringList(key) ?? <String>[];
+    return prefs.getString(_kLastPlanDate);
+  }
 
-    final current = list
-        .map((s) => jsonDecode(s))
-        .whereType<Map<String, dynamic>>()
-        .map(DailyPlanItem.fromJson)
-        .toList();
-
-    // Не дублируем по id
-    final ids = current.map((e) => e.id).toSet();
-    final merged = [
-      ...current,
-      ...tasks.where((t) => !ids.contains(t.id)),
-    ];
-
-    final out = merged.map((e) => jsonEncode(e.toJson())).toList();
-    await prefs.setStringList(key, out);
+  Future<void> setLastPlanDate(DateTime day) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_kLastPlanDate, _dateStamp(day));
   }
 }
