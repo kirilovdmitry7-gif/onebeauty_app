@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart' show kIsWeb, kDebugMode;
 import 'package:flutter/material.dart';
-
 import 'package:onebeauty_clean/core/dev/dev_flags.dart';
+
 import 'package:onebeauty_clean/core/ai/ai_client.dart';
 import 'package:onebeauty_clean/core/config/app_config.dart';
 import 'package:onebeauty_clean/features/advice/ai_advice.dart';
@@ -29,11 +29,11 @@ class _HealthScreenState extends State<HealthScreen> {
   bool _planLoading = true;
   List<DailyPlanItem> _plan = const [];
 
-  // Профиль + генератор задач (для лампочки)
+  // Профиль + генератор (лампочка)
   final _profileSvc = UserProfileService();
   final AiTaskGenerator _ai = ApiAiTaskGenerator(AiClient());
 
-  // Клиент к прокси (пинг)
+  // Тест-пинг
   final AiClient _aiClient = AiClient();
 
   // Streak
@@ -48,14 +48,75 @@ class _HealthScreenState extends State<HealthScreen> {
 
   Future<void> _loadPlanToday() async {
     setState(() => _planLoading = true);
-    final plan = await _planSvc.load(DateTime.now());
-    final s = await _streakSvc.getStreak(DateTime.now());
+
+    final today = DateTime.now();
+    var plan = await _planSvc.load(today);
+
+    // seed: если план пуст (новая origin / GH Pages), положим базовые пункты
+    if (plan.isEmpty) {
+      final seed = _seedForLocale(Localizations.localeOf(context).languageCode);
+      if (seed.isNotEmpty) {
+        await _planSvc.addMany(today, seed);
+        plan = await _planSvc.load(today);
+      }
+    }
+
+    final s = await _streakSvc.getStreak(today);
     if (!mounted) return;
     setState(() {
       _plan = plan;
       _streak = s;
       _planLoading = false;
     });
+  }
+
+  List<PlannedTask> _seedForLocale(String code) {
+    switch (code) {
+      case 'ru':
+        return [
+          PlannedTask(
+              title: 'Вода 3×250 мл до 16:00', category: 'water', level: 1),
+          PlannedTask(
+              title: '7 мин растяжки после ужина',
+              category: 'activity',
+              level: 1),
+          PlannedTask(title: '5 мин осознанности', category: 'mind', level: 1),
+          PlannedTask(
+              title: 'Экран-детокс 30 мин перед сном',
+              category: 'productivity',
+              level: 1),
+        ];
+      case 'es':
+        return [
+          PlannedTask(
+              title: 'Agua 3×250 ml antes de las 16:00',
+              category: 'water',
+              level: 1),
+          PlannedTask(
+              title: 'Estiramiento 7 min después de la cena',
+              category: 'activity',
+              level: 1),
+          PlannedTask(title: 'Mindfulness 5 min', category: 'mind', level: 1),
+          PlannedTask(
+              title: 'Detox de pantallas 30 min antes de dormir',
+              category: 'productivity',
+              level: 1),
+        ];
+      default: // en
+        return [
+          PlannedTask(
+              title: 'Water 3×250ml before 4pm', category: 'water', level: 1),
+          PlannedTask(
+              title: 'Stretch 7 min after dinner',
+              category: 'activity',
+              level: 1),
+          PlannedTask(title: 'Mindfulness 5 min', category: 'mind', level: 1),
+          PlannedTask(
+              title: 'Screen detox 30 min before bed',
+              category: 'productivity',
+              level: 1),
+        ];
+    }
   }
 
   Future<void> _togglePlanItem(int index, bool value) async {
@@ -68,17 +129,16 @@ class _HealthScreenState extends State<HealthScreen> {
     });
     await _planSvc.toggle(DateTime.now(), item.id, value);
 
-    // Пересчитываем streak по AI-плану
+    // Пересчёт streak — по AI-плану
     final doneNow = _plan.where((x) => x.done).length;
     final totalNow = _plan.length;
     final allDone = totalNow > 0 && doneNow == totalNow;
 
-    int s;
-    if (allDone) {
-      s = await _streakSvc.markTodayFull(DateTime.now());
-    } else {
-      s = await _streakSvc.applySoftOrReset(DateTime.now());
-    }
+    final now = DateTime.now();
+    final s = allDone
+        ? await _streakSvc.markTodayFull(now)
+        : await _streakSvc.applySoftOrReset(now);
+
     if (!mounted) return;
     setState(() => _streak = s);
   }
@@ -93,76 +153,82 @@ class _HealthScreenState extends State<HealthScreen> {
     };
     final cats = {'water', 'activity', 'mind', 'care', 'productivity'};
     final forDay = DateTime.now();
-
-    // Берём текущие пункты плана как "recent"
     final recent = _plan.map((e) => e.title).toList();
 
-    final suggestions = await _ai.generate(
-      locale: Localizations.localeOf(context).languageCode,
-      level: requestedLevel,
-      enabledCats: cats,
-      forDay: forDay,
-      recentTitles: recent,
-      profile: profile,
-      count: 5,
-    );
+    try {
+      final suggestions = await _ai.generate(
+        locale: Localizations.localeOf(context).languageCode,
+        level: requestedLevel,
+        enabledCats: cats,
+        forDay: forDay,
+        recentTitles: recent,
+        profile: profile,
+        count: 5,
+      );
 
-    if (!mounted) return;
-    showModalBottomSheet(
-      context: context,
-      showDragHandle: true,
-      builder: (_) => SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(loc.planToday,
-                  style: Theme.of(context).textTheme.titleLarge),
-              const SizedBox(height: 12),
-              ...suggestions.map((s) => ListTile(
-                    leading: const Icon(Icons.auto_awesome),
-                    title: Text(s.title),
-                    subtitle: Text(
-                      '${loc.catalogTasks.replaceAll(":", "")}: ${s.category} • ${loc.aiPlan.split(" ").first}: ${s.level}',
+      if (!mounted) return;
+      showModalBottomSheet(
+        context: context,
+        showDragHandle: true,
+        builder: (_) => SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(loc.planToday,
+                    style: Theme.of(context).textTheme.titleLarge),
+                const SizedBox(height: 12),
+                ...suggestions.map((s) => ListTile(
+                      leading: const Icon(Icons.auto_awesome),
+                      title: Text(s.title),
+                      subtitle: Text(
+                        '${loc.catalogTasks.replaceAll(":", "")}: ${s.category} • ${loc.aiPlan.split(" ").first}: ${s.level}',
+                      ),
+                    )),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text(loc.close),
                     ),
-                  )),
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: Text(loc.close),
-                  ),
-                  const Spacer(),
-                  FilledButton.icon(
-                    onPressed: () async {
-                      final toSave = suggestions
-                          .map((s) => PlannedTask(
-                                title: s.title,
-                                category: s.category,
-                                level: s.level,
-                              ))
-                          .toList();
-                      await _planSvc.addMany(forDay, toSave);
-                      if (!mounted) return;
-                      Navigator.pop(context);
-                      await _loadPlanToday();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(loc.addedToPlan)),
-                      );
-                    },
-                    icon: const Icon(Icons.add_task),
-                    label: Text(loc.addToPlan),
-                  ),
-                ],
-              ),
-            ],
+                    const Spacer(),
+                    FilledButton.icon(
+                      onPressed: () async {
+                        final toSave = suggestions
+                            .map((s) => PlannedTask(
+                                  title: s.title,
+                                  category: s.category,
+                                  level: s.level,
+                                ))
+                            .toList();
+                        await _planSvc.addMany(forDay, toSave);
+                        if (!mounted) return;
+                        Navigator.pop(context);
+                        await _loadPlanToday();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(loc.addedToPlan)),
+                        );
+                      },
+                      icon: const Icon(Icons.add_task),
+                      label: Text(loc.addToPlan),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('AI недоступен — используются локальные задания')),
+      );
+    }
   }
 
   Future<void> _aiPing() async {
@@ -180,15 +246,23 @@ class _HealthScreenState extends State<HealthScreen> {
     }
   }
 
+  Future<void> _toggleAiEnabled() async {
+    final newValue = !DevFlags.aiEnabled;
+    await DevFlags.setAiEnabled(newValue);
+    if (!mounted) return;
+    setState(() {});
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(newValue ? 'AI включён' : 'AI выключен')),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
 
-    // Прогресс считаем по AI-плану
     final total = _plan.length;
     final done = _plan.where((t) => t.done).length;
     final progress = total == 0 ? 0.0 : done / total;
-
     final iconColor = Theme.of(context).colorScheme.onSurface;
 
     return Scaffold(
@@ -197,7 +271,7 @@ class _HealthScreenState extends State<HealthScreen> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            // Баннер + иконки
+            // БАННЕР + ИКОНКИ
             Padding(
               padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
               child: Material(
@@ -226,12 +300,17 @@ class _HealthScreenState extends State<HealthScreen> {
                         icon: Icon(Icons.account_circle,
                             color: iconColor, size: 24),
                       ),
-                      // Лампочка — генерация плана
+
+                      // Лампочка — генерация плана (выключаем, если AI отключён)
                       IconButton(
-                        tooltip: loc.planToday,
-                        onPressed: () => _openAiSuggestions(loc),
+                        tooltip:
+                            DevFlags.aiEnabled ? loc.planToday : 'AI выключен',
+                        onPressed: DevFlags.aiEnabled
+                            ? () => _openAiSuggestions(loc)
+                            : null,
                         icon: Icon(Icons.lightbulb, color: iconColor, size: 24),
                       ),
+
                       // Статистика
                       IconButton(
                         tooltip: loc.statsTitle,
@@ -246,27 +325,41 @@ class _HealthScreenState extends State<HealthScreen> {
                             : Icon(Icons.query_stats,
                                 color: iconColor, size: 24),
                       ),
-                      // AI-пинг (тест) — только если разрешено в DevSettings
-                      if (kDebugMode && DevFlags.aiEnabled)
-                        IconButton(
-                          tooltip: loc.aiTest,
-                          onPressed: _aiPing,
-                          icon:
-                              Icon(Icons.smart_toy, color: iconColor, size: 24),
-                        ),
-                      // Dev Settings (шестерёнка) — только в debug
-                      if (kDebugMode)
-                        IconButton(
-                          tooltip: 'Dev',
-                          onPressed: () {
+
+                      // Переключатель AI — доступен всегда (и в проде)
+                      PopupMenuButton<String>(
+                        tooltip: 'Опции',
+                        onSelected: (v) async {
+                          if (v == 'toggle_ai') {
+                            await _toggleAiEnabled();
+                          } else if (v == 'open_dev') {
+                            if (!mounted) return;
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                   builder: (_) => const DevSettingsScreen()),
                             );
-                          },
-                          icon:
-                              Icon(Icons.settings, color: iconColor, size: 24),
-                        ),
+                          } else if (v == 'ai_ping' && kDebugMode) {
+                            await _aiPing();
+                          }
+                        },
+                        itemBuilder: (ctx) => [
+                          CheckedPopupMenuItem(
+                            value: 'toggle_ai',
+                            checked: DevFlags.aiEnabled,
+                            child: const Text('AI включён'),
+                          ),
+                          const PopupMenuItem(
+                            value: 'open_dev',
+                            child: Text('Dev Settings'),
+                          ),
+                          if (kDebugMode)
+                            const PopupMenuItem(
+                              value: 'ai_ping',
+                              child: Text('AI ping (debug)'),
+                            ),
+                        ],
+                        icon: Icon(Icons.more_vert, color: iconColor, size: 24),
+                      ),
                     ],
                   ),
                 ),
@@ -274,7 +367,7 @@ class _HealthScreenState extends State<HealthScreen> {
             ),
             const SizedBox(height: 12),
 
-            // Прогресс (по AI-плану)
+            // ПРОГРЕСС (по AI-плану)
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
               child: Column(
@@ -306,26 +399,41 @@ class _HealthScreenState extends State<HealthScreen> {
             ),
             const SizedBox(height: 12),
 
-            // ⚡ ИИ-совет
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: AdviceSection(
-                input: AdviceInput(
-                  tz: 'America/New_York',
-                  doneToday: done,
-                  totalToday: total,
-                  streak: _streak,
+            // ⚡ ADVICE CARD — показываем только если AI включён
+            if (DevFlags.aiEnabled)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: AdviceSection(
+                  input: AdviceInput(
+                    tz: 'America/New_York',
+                    doneToday: done,
+                    totalToday: total,
+                    streak: _streak,
+                  ),
+                  useApi: kUseAdviceApi && DevFlags.aiEnabled,
+                  apiBaseUrl: kAdviceApiBaseUrl,
+                  apiHeaders: kAdviceApiHeaders,
+                  showSourceBadge:
+                      kDebugMode ? DevFlags.showSourceBadge : false,
                 ),
-                useApi: kUseAdviceApi,
-                apiBaseUrl: kAdviceApiBaseUrl,
-                apiHeaders: kAdviceApiHeaders,
-                showSourceBadge: kDebugMode ? DevFlags.showSourceBadge : false,
+              )
+            else
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Material(
+                  color: Colors.grey.withOpacity(.12),
+                  borderRadius: BorderRadius.circular(8),
+                  child: const Padding(
+                    padding: EdgeInsets.all(12),
+                    child: Text(
+                        'AI выключен — советы и генерация временно недоступны'),
+                  ),
+                ),
               ),
-            ),
 
             const SizedBox(height: 12),
 
-            // План ИИ — единственный список
+            // ЕДИНСТВЕННЫЙ СПИСОК — AI PLAN
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(loc.aiPlan,
