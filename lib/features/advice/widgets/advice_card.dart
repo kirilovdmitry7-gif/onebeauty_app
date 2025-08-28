@@ -21,6 +21,10 @@ class AdviceSection extends StatelessWidget {
   /// Показывать бейдж источника в карточке (по умолчанию только в debug).
   final bool showSourceBadge;
 
+  /// Колбэк "добавить все пункты из tomorrow_plan в план".
+  /// Если null — кнопка не показывается.
+  final Future<void> Function(List<String> items)? onAddAllToPlan;
+
   const AdviceSection({
     super.key,
     this.input,
@@ -28,6 +32,7 @@ class AdviceSection extends StatelessWidget {
     this.apiBaseUrl,
     this.apiHeaders,
     this.showSourceBadge = kDebugMode,
+    this.onAddAllToPlan,
   });
 
   @override
@@ -80,12 +85,13 @@ class AdviceSection extends StatelessWidget {
                 sourceLabel: isApi ? 'API ⚠' : 'MOCK',
                 showSourceBadge: showSourceBadge,
                 warnMessage: isApi ? warn : null,
+                onAddAllToPlan: onAddAllToPlan,
               );
             },
           );
         }
 
-        // Состояние done, но данных нет (на всякий случай) → фоллбэк на мок
+        // Состояние done, но данных нет → фоллбэк на мок
         if (!snap.hasData) {
           final fallback = MockAdviceSource();
           return FutureBuilder<AiAdvice>(
@@ -98,6 +104,7 @@ class AdviceSection extends StatelessWidget {
                 advice: advice,
                 sourceLabel: 'MOCK',
                 showSourceBadge: showSourceBadge,
+                onAddAllToPlan: onAddAllToPlan,
               );
             },
           );
@@ -110,6 +117,7 @@ class AdviceSection extends StatelessWidget {
           advice: advice,
           sourceLabel: isApi ? 'API' : 'MOCK',
           showSourceBadge: showSourceBadge,
+          onAddAllToPlan: onAddAllToPlan,
         );
       },
     );
@@ -122,6 +130,7 @@ class _AdviceCard extends StatelessWidget {
   final String sourceLabel;
   final bool showSourceBadge;
   final String? warnMessage; // если был фоллбэк из-за ошибки API
+  final Future<void> Function(List<String> items)? onAddAllToPlan;
 
   const _AdviceCard({
     required this.locText,
@@ -129,6 +138,7 @@ class _AdviceCard extends StatelessWidget {
     required this.sourceLabel,
     required this.showSourceBadge,
     this.warnMessage,
+    this.onAddAllToPlan,
   });
 
   @override
@@ -201,6 +211,17 @@ class _AdviceCard extends StatelessWidget {
                   );
                 }).toList(),
               ),
+              if (onAddAllToPlan != null) ...[
+                const SizedBox(height: 8),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: FilledButton.icon(
+                    onPressed: () => onAddAllToPlan!(advice.tomorrowPlan),
+                    icon: const Icon(Icons.playlist_add_check),
+                    label: Text(locText.addToPlan),
+                  ),
+                ),
+              ],
             ],
 
             // Weekly summary

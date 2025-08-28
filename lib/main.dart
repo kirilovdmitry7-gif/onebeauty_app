@@ -21,7 +21,7 @@ import 'package:onebeauty_clean/features/auth/auth_service.dart';
 import 'package:onebeauty_clean/core/survey/quick_survey_service.dart';
 
 // Dev flags
-import 'package:onebeauty_clean/features/dev/dev_flags.dart';
+import 'package:onebeauty_clean/core/dev/dev_flags.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

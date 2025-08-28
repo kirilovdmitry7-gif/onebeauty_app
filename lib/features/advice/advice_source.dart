@@ -1,96 +1,99 @@
-import 'dart:async';
+// lib/features/advice/advice_source.dart
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import 'ai_advice.dart';
 
-/// Единый интерфейс источника советов
 abstract class AdviceSource {
   Future<AiAdvice> getAdvice(AdviceInput input);
 }
 
-/// Локальный мок без сервера — для разработки/UX
+/// Мок-источник: генерирует совет + короткое объяснение "почему".
 class MockAdviceSource implements AdviceSource {
   @override
   Future<AiAdvice> getAdvice(AdviceInput input) async {
-    await Future.delayed(const Duration(milliseconds: 200));
+    final now = DateTime.now();
+    final h = now.hour;
 
-    final ratio =
-        (input.totalToday > 0) ? input.doneToday / input.totalToday : 0.0;
-
-    String tip;
-    if (input.totalToday == 0) {
-      tip =
-          'Нет задач на сегодня — добавь 1–2 простых пункта, чтобы держать ритм.';
-    } else if (ratio >= 1.0) {
-      tip =
-          'Красота! День закрыт на 100%. Поддержи серию — лёгкая растяжка перед сном.';
-    } else if (ratio >= 0.6) {
-      tip = 'Осталось чуть-чуть. 10–15 минут ходьбы закроют цель по шагам.';
-    } else if (ratio > 0.0) {
-      tip = 'Начало положено. Выпей стакан воды и сделай 5 минут растяжки.';
+    String partOfDay;
+    if (h < 11) {
+      partOfDay = 'morning';
+    } else if (h < 17) {
+      partOfDay = 'afternoon';
     } else {
-      tip = 'Стартуем легко: стакан воды сейчас и короткая прогулка днём.';
+      partOfDay = 'evening';
     }
 
+    final progress =
+        (input.totalToday > 0) ? (input.doneToday / input.totalToday) : 0.0;
+
+    final advice = switch (partOfDay) {
+      'morning' =>
+        'Start small: a glass of water now and a 5-min stretch after breakfast.',
+      'afternoon' =>
+        'Short break: 10 brisk minutes or a few stairs — then hydrate.',
+      _ => 'Wind down: warm tea, light walk, and no screens 30 min before bed.',
+    };
+
+    final why = switch (partOfDay) {
+      'morning' =>
+        'Morning hydration + light mobility wake up your body and improve focus.',
+      'afternoon' =>
+        'A quick pulse-raiser counters post-lunch dip; water supports energy.',
+      _ =>
+        'Evening routine helps your sleep quality — key for recovery and mood.',
+    };
+
+    final extraWhy = (progress >= 1.0)
+        ? ' You already completed today — keep the streak gentle and consistent.'
+        : (progress >= 0.5)
+            ? ' You’re over halfway — a tiny action now keeps momentum.'
+            : ' Tiny actions avoid overwhelm and build momentum.';
+
     return AiAdvice(
-      adviceToday: tip,
+      adviceToday: advice,
       tomorrowPlan: const [
-        'Вода 3× по 250 мл до 16:00',
-        'Растяжка 7 минут после ужина'
+        'Water 3× 250ml before 4pm',
+        'Stretch 7 min after dinner',
       ],
       weeklySummary: input.streak > 0
-          ? 'Серия держится уже ${input.streak} дн.'
-          : 'Собираем первую серию — начни с воды и сна.',
-      // Важно: список не const, т.к. Nudge(...) не const-конструктор
-      nudges: [
-        Nudge(
-            at: '21:15',
-            message: 'Пора готовиться ко сну — завтра будет легче.')
+          ? 'Nice run — let’s extend the streak this week.'
+          : 'Let’s build your first streak.',
+      nudges: const [
+        Nudge(at: '10:30', message: 'Stand up and drink a glass of water.'),
+        Nudge(at: '21:15', message: 'Prepare for sleep — slow down screens.'),
       ],
       tone: 'warm',
+      why: '$why$extraWhy',
     );
   }
 }
 
-/// Реальный источник через API (POST {baseUrl}/ai/advice)
+/// Реальный источник через HTTP API.
+/// Ожидает POST { tz, today:{done,total}, streak } на <baseUrl>/ai/advice
+/// и читает поля advice_today, tomorrow_plan, weekly_summary, nudges, advice_tone, why|reason.
 class ApiAdviceSource implements AdviceSource {
-  final String baseUrl; // напр. http://127.0.0.1:8787
-  final Map<String, String> headers; // сюда можно передать Bearer-токен
+  final String baseUrl;
+  final Map<String, String>? headers;
 
-  ApiAdviceSource({
-    required this.baseUrl,
-    Map<String, String>? headers,
-  }) : headers = {
-          'Content-Type': 'application/json',
-          if (headers != null) ...headers,
-        };
+  ApiAdviceSource({required this.baseUrl, this.headers});
+
+  Uri get _adviceUri => Uri.parse('$baseUrl/ai/advice');
 
   @override
   Future<AiAdvice> getAdvice(AdviceInput input) async {
-    final endpoint =
-        baseUrl.endsWith('/') ? '${baseUrl}ai/advice' : '$baseUrl/ai/advice';
-
-    final uri = Uri.parse(endpoint);
-
-    final payload = {
-      'tz': input.tz,
-      'today': {'done': input.doneToday, 'total': input.totalToday},
-      'streak': input.streak,
-      // Расширим позже (yesterday/week/profile), контракт уже поддерживает
-    };
-
     final r = await http.post(
-      uri,
-      headers: headers,
-      body: jsonEncode(payload),
+      _adviceUri,
+      headers: {'Content-Type': 'application/json', ...?headers},
+      body: jsonEncode(input.toJson()),
     );
 
-    if (r.statusCode >= 200 && r.statusCode < 300) {
-      final Map<String, dynamic> j = jsonDecode(r.body) as Map<String, dynamic>;
-      return AiAdvice.fromJson(j);
+    if (r.statusCode < 200 || r.statusCode >= 300) {
+      throw Exception('Advice API ${r.statusCode}: ${r.body}');
     }
 
-    throw Exception('Advice API error: ${r.statusCode} ${r.body}');
+    final obj = jsonDecode(r.body) as Map<String, dynamic>;
+    // Парсим как есть; если why отсутствует — карточка просто не покажет блок объяснения.
+    return AiAdvice.fromJson(obj);
   }
 }
