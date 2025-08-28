@@ -1,47 +1,51 @@
+import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// Сервис "Скрыто на сегодня" (персистит список id задач на конкретную дату).
+/// Храним set скрытых taskId для конкретной даты (только «на сегодня»).
 class HiddenTodayService {
-  /// Формат ключа в SharedPreferences: hidden_yyyyMMdd
-  String _keyFor(DateTime day) {
+  static String _keyForDate(DateTime day) {
     final d = DateTime(day.year, day.month, day.day);
-    final yyyy = d.year.toString().padLeft(4, '0');
-    final mm = d.month.toString().padLeft(2, '0');
-    final dd = d.day.toString().padLeft(2, '0');
-    return 'hidden_${yyyy}${mm}${dd}';
+    return 'hidden_today_${d.toIso8601String()}';
+    // будет вида hidden_today_2025-08-28T00:00:00.000
   }
 
-  /// Загрузить Set скрытых ID на день.
-  Future<Set<String>> loadHiddenIds(DateTime day) async {
+  static Future<Set<String>> _loadHiddenSet(DateTime day) async {
     final sp = await SharedPreferences.getInstance();
-    final list = sp.getStringList(_keyFor(day)) ?? const <String>[];
-    return list.toSet();
-  }
-
-  /// Скрыть конкретный id на день.
-  Future<void> hideForDate(DateTime day, String id) async {
-    final sp = await SharedPreferences.getInstance();
-    final key = _keyFor(day);
-    final list = sp.getStringList(key) ?? <String>[];
-    if (!list.contains(id)) {
-      list.add(id);
-      await sp.setStringList(key, list);
+    final raw = sp.getString(_keyForDate(day));
+    if (raw == null || raw.isEmpty) return <String>{};
+    try {
+      final list = (jsonDecode(raw) as List).cast<String>();
+      return list.toSet();
+    } catch (_) {
+      return <String>{};
     }
   }
 
-  /// Убрать из скрытых конкретный id (опционально, если понадобится).
-  Future<void> unhideForDate(DateTime day, String id) async {
+  static Future<void> _saveHiddenSet(DateTime day, Set<String> ids) async {
     final sp = await SharedPreferences.getInstance();
-    final key = _keyFor(day);
-    final list = sp.getStringList(key) ?? <String>[];
-    if (list.remove(id)) {
-      await sp.setStringList(key, list);
-    }
+    await sp.setString(_keyForDate(day), jsonEncode(ids.toList()));
   }
 
-  /// Полностью очистить скрытые для дня.
-  Future<void> clearForDate(DateTime day) async {
-    final sp = await SharedPreferences.getInstance();
-    await sp.remove(_keyFor(day));
+  static Future<bool> isHidden(String taskId, DateTime day) async {
+    final set = await _loadHiddenSet(day);
+    return set.contains(taskId);
+  }
+
+  static Future<void> hide(String taskId, DateTime day) async {
+    final set = await _loadHiddenSet(day);
+    set.add(taskId);
+    await _saveHiddenSet(day, set);
+  }
+
+  /// Новый метод: убираем taskId из скрытых на выбранный день.
+  static Future<void> unhide(String taskId, DateTime day) async {
+    final set = await _loadHiddenSet(day);
+    set.remove(taskId);
+    await _saveHiddenSet(day, set);
+  }
+
+  /// Новый метод: очищаем список скрытых задач за день.
+  static Future<void> clearFor(DateTime day) async {
+    await _saveHiddenSet(day, <String>{});
   }
 }

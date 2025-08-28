@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 // Локализация
 import 'package:onebeauty_clean/l10n/gen/app_localizations.dart';
 
-// Экраны (ИСПОЛЬЗУЕМ package:-импорты)
+// Экраны
 import 'package:onebeauty_clean/features/health/health_screen.dart';
 import 'package:onebeauty_clean/features/studio/studio_screen.dart';
 import 'package:onebeauty_clean/features/store/store_screen.dart';
@@ -25,8 +25,6 @@ import 'package:onebeauty_clean/core/dev/dev_flags.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Загружаем dev-флаги до старта приложения,
-  // чтобы в рантайме иметь корректные значения.
   await DevFlags.load();
   runApp(const OneBeauty());
 }
@@ -39,9 +37,9 @@ class OneBeauty extends StatefulWidget {
 
 class _OneBeautyState extends State<OneBeauty> {
   Locale? _locale;
-  bool _bootLoading = true; // загрузка состояния приложения
-  bool _showOnboarding = false; // показывать ли онбординг до входа
-  bool _needSurvey = false; // нужна ли анкета после входа
+  bool _bootLoading = true;
+  bool _showOnboarding = false;
+  bool _needSurvey = false;
 
   final _auth = AuthService();
   final _survey = QuickSurveyService();
@@ -56,7 +54,7 @@ class _OneBeautyState extends State<OneBeauty> {
     final prefs = await SharedPreferences.getInstance();
     final seenOnboarding = prefs.getBool('seen_onboarding_v1') ?? false;
 
-    final user = await _auth.currentUser(); // проверка «сессии»
+    final user = await _auth.currentUser();
     final surveyDone = await _survey.isDone();
 
     setState(() {
@@ -66,17 +64,14 @@ class _OneBeautyState extends State<OneBeauty> {
     });
   }
 
-  // смена языка
   void _setLocale(Locale locale) => setState(() => _locale = locale);
 
-  // завершение онбординга
   Future<void> _finishOnboarding() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('seen_onboarding_v1', true);
     setState(() => _showOnboarding = false);
   }
 
-  // колбэк после успешного входа
   Future<void> _onSignedIn() async {
     final surveyDone = await _survey.isDone();
     setState(() {
@@ -85,16 +80,14 @@ class _OneBeautyState extends State<OneBeauty> {
     });
   }
 
-  // выход
   Future<void> _onSignOut() async {
     await _auth.signOut();
     setState(() {
       _needSurvey = false;
-      _showOnboarding = true; // после выхода можно снова показать онбординг
+      _showOnboarding = true;
     });
   }
 
-  // анкета завершена
   void _onSurveyDone() => setState(() => _needSurvey = false);
 
   @override
@@ -118,8 +111,6 @@ class _OneBeautyState extends State<OneBeauty> {
       return OnboardingScreen(onFinish: _finishOnboarding);
     }
 
-    // Проверяем текущего пользователя каждый раз, чтобы
-    // после signOut/signIn корректно переключаться.
     return FutureBuilder<AuthUser?>(
       future: _auth.currentUser(),
       builder: (context, snap) {
@@ -160,7 +151,6 @@ class _Root extends StatefulWidget {
 class _RootState extends State<_Root> {
   int index = 0;
 
-  // ВАЖНО: без const перед HealthScreen(); используем package:-импорты выше
   final pages = <Widget>[
     HealthScreen(),
     StudioScreen(),
@@ -177,7 +167,6 @@ class _RootState extends State<_Root> {
       appBar: AppBar(
         title: Text(labels[index]),
         actions: [
-          // выбор языка
           PopupMenuButton<Locale>(
             tooltip: 'Language',
             icon: const Icon(Icons.language),
@@ -189,7 +178,6 @@ class _RootState extends State<_Root> {
             ],
           ),
           const SizedBox(width: 4),
-          // профиль
           IconButton(
             tooltip: 'Profile',
             icon: const Icon(Icons.account_circle),
@@ -204,7 +192,6 @@ class _RootState extends State<_Root> {
               );
             },
           ),
-          // выход
           IconButton(
             tooltip: loc.signOut,
             icon: const Icon(Icons.logout),
