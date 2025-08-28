@@ -1,12 +1,19 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:onebeauty_clean/core/ai/ai_client.dart';
+import 'package:onebeauty_clean/features/advice/ai_advice.dart';
+import 'package:onebeauty_clean/features/advice/widgets/advice_card.dart';
+
+import 'package:onebeauty_clean/core/config/app_config.dart'; // ← добавили
+
 import '../../l10n/gen/app_localizations.dart';
-import 'health_tasks_service.dart';
-import '../profile/survey_screen.dart';
-import '../profile/user_profile_service.dart';
 import '../ai/ai_task_generator.dart';
 import '../plan/daily_plan_service.dart';
-import 'package:onebeauty_clean/core/ai/ai_client.dart';
-import 'health_stats_screen.dart'; //
+import '../profile/survey_screen.dart';
+import '../profile/user_profile_service.dart';
+import 'health_stats_screen.dart' as stats; // алиас
+import 'health_tasks_service.dart';
+import 'streak_service.dart';
 
 class HealthScreen extends StatefulWidget {
   const HealthScreen({super.key});
@@ -33,6 +40,10 @@ class _HealthScreenState extends State<HealthScreen> {
   // Клиент к прокси (пинг)
   final AiClient _aiClient = AiClient();
 
+  // Простой streak
+  final StreakService _streakSvc = StreakService();
+  int _streak = 0;
+
   @override
   void initState() {
     super.initState();
@@ -45,10 +56,21 @@ class _HealthScreenState extends State<HealthScreen> {
 
   Future<void> _loadToday() async {
     setState(() => _loading = true);
-    final tasks = await _service.load(DateTime.now());
+    final now = DateTime.now();
+    final tasks = await _service.load(now);
+
+    // пересчёт прогресса и обновление streak
+    final doneNow = tasks.where((t) => t.done).length;
+    final totalNow = tasks.length;
+    if (totalNow > 0 && doneNow == totalNow) {
+      await _streakSvc.markTodayFull(now);
+    }
+    final s = await _streakSvc.getStreak(now);
+
     if (!mounted) return;
     setState(() {
       _tasks = tasks;
+      _streak = s;
       _loading = false;
     });
   }
@@ -77,6 +99,20 @@ class _HealthScreenState extends State<HealthScreen> {
       ];
     });
     await _service.toggle(DateTime.now(), t.id, value);
+
+    // пересчёт прогресса и streak после изменения
+    final now = DateTime.now();
+    final doneNow = _tasks.where((t) => t.done).length;
+    final totalNow = _tasks.length;
+
+    int s;
+    if (totalNow > 0 && doneNow == totalNow) {
+      s = await _streakSvc.markTodayFull(now);
+    } else {
+      s = await _streakSvc.getStreak(now);
+    }
+    if (!mounted) return;
+    setState(() => _streak = s);
   }
 
   Future<void> _togglePlanItem(int index, bool value) async {
@@ -140,21 +176,22 @@ class _HealthScreenState extends State<HealthScreen> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('План на сегодня',
+              Text(loc.planToday,
                   style: Theme.of(context).textTheme.titleLarge),
               const SizedBox(height: 12),
               ...suggestions.map((s) => ListTile(
                     leading: const Icon(Icons.auto_awesome),
                     title: Text(s.title),
-                    subtitle:
-                        Text('Категория: ${s.category} • Уровень: ${s.level}'),
+                    subtitle: Text(
+                      '${loc.catalogTasks.replaceAll(":", "")}: ${s.category} • ${loc.aiPlan.split(" ").first}: ${s.level}',
+                    ),
                   )),
               const SizedBox(height: 12),
               Row(
                 children: [
                   TextButton(
                     onPressed: () => Navigator.pop(context),
-                    child: const Text('Закрыть'),
+                    child: Text(loc.close),
                   ),
                   const Spacer(),
                   FilledButton.icon(
@@ -171,11 +208,11 @@ class _HealthScreenState extends State<HealthScreen> {
                       Navigator.pop(context);
                       await _loadPlanToday();
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Добавлено в план')),
+                        SnackBar(content: Text(loc.addedToPlan)),
                       );
                     },
                     icon: const Icon(Icons.add_task),
-                    label: const Text('Добавить в план'),
+                    label: Text(loc.addToPlan),
                   ),
                 ],
               ),
@@ -208,6 +245,8 @@ class _HealthScreenState extends State<HealthScreen> {
     final done = _tasks.where((t) => t.done).length;
     final progress = total == 0 ? 0.0 : done / total;
 
+    final iconColor = Theme.of(context).colorScheme.onSurface;
+
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () async => _loadAll(),
@@ -232,36 +271,48 @@ class _HealthScreenState extends State<HealthScreen> {
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ),
-                      IconButton(
-                        tooltip: 'Статистика',
-                        onPressed: () => Navigator.of(context).push(
-                          MaterialPageRoute(
-                              builder: (_) => const HealthStatsScreen()),
-                        ),
-                        icon: const Icon(Icons.insights),
-                      ),
+                      // Профиль
                       IconButton(
                         tooltip: loc.surveyTitle,
                         onPressed: () => Navigator.of(context).push(
                           MaterialPageRoute(
-                              builder: (_) => const SurveyScreen()),
+                            builder: (_) => const SurveyScreen(),
+                          ),
                         ),
-                        icon: const Icon(Icons.account_circle),
+                        icon: Icon(Icons.account_circle,
+                            color: iconColor, size: 24),
                       ),
+                      // Лампочка — генерация плана
                       IconButton(
                         tooltip: loc.planToday,
                         onPressed: () => _openAiSuggestions(loc),
-                        icon: const Icon(Icons.lightbulb),
+                        icon: Icon(Icons.lightbulb, color: iconColor, size: 24),
                       ),
+                      // Статистика
                       IconButton(
-                        tooltip: 'AI тест',
-                        onPressed: _aiPing,
-                        icon: const Icon(Icons.smart_toy),
+                        tooltip: loc.statsTitle,
+                        onPressed: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => stats.HealthStatsScreen(),
+                          ),
+                        ),
+                        icon: kIsWeb
+                            ? const Text('📊',
+                                style: TextStyle(fontSize: 20, height: 1.1))
+                            : Icon(Icons.query_stats,
+                                color: iconColor, size: 24),
                       ),
+                      // AI-пинг (тест)
+                      IconButton(
+                        tooltip: loc.aiTest,
+                        onPressed: _aiPing,
+                        icon: Icon(Icons.smart_toy, color: iconColor, size: 24),
+                      ),
+                      // Сброс каталога
                       IconButton(
                         tooltip: loc.resetToday,
                         onPressed: _loading ? null : _resetToday,
-                        icon: const Icon(Icons.refresh),
+                        icon: Icon(Icons.refresh, color: iconColor, size: 24),
                       ),
                     ],
                   ),
@@ -302,7 +353,26 @@ class _HealthScreenState extends State<HealthScreen> {
             ),
             const SizedBox(height: 12),
 
-            // Каталог задач
+            // ⚡ ИИ-совет (источник настраивается в app_config.dart)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: AdviceSection(
+                input: AdviceInput(
+                  tz: 'America/New_York',
+                  doneToday: done,
+                  totalToday: total,
+                  streak: _streak,
+                ),
+                useApi: kUseAdviceApi,
+                apiBaseUrl: kAdviceApiBaseUrl,
+                apiHeaders: kAdviceApiHeaders,
+                showSourceBadge: kShowAdviceSourceBadge,
+              ),
+            ),
+
+            const SizedBox(height: 12),
+
+            // Каталог задач (ручные)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(loc.catalogTasks,

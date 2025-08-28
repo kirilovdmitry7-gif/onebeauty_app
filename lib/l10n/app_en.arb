@@ -41,11 +41,16 @@
 
   "greetHello": "Hello! 👋",
   "greetHelloName": "Hello, {name}! 👋",
-  "@greetHelloName": { "placeholders": { "name": { "type": "String" } } },
+  "@greetHelloName": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
 
   "goalHintHealth": "Make small daily steps: water, steps, sleep.",
   "goalHintSkin": "Skin-care tracker and tips are coming soon.",
   "goalHintFitness": "Keep active: steps, stretch, sleep.",
+
   "healthResetTooltip": "Reset today's checks",
 
   "surveyTitle": "Quick survey",
@@ -86,6 +91,7 @@
       "total": { "type": "int" }
     }
   },
+
   "healthAllDone": "All done for today! 🎉",
 
   "streakTitle": "Your streak",
@@ -132,34 +138,40 @@
   "surveyBody": "Body parameters",
   "surveyWeight": "Weight (kg)",
   "surveyHeight": "Height (cm)",
-  "saved": "Saved",
 
   "surveyStress": "Stress level",
   "stressLow": "Low",
   "stressMedium": "Medium",
   "stressHigh": "High",
+
   "surveySleep": "Sleep quality",
   "sleepPoor": "Poor",
   "sleepAverage": "Average",
   "sleepGood": "Good",
 
   "planTomorrow": "Plan for tomorrow",
-  "close": "Close",
-
-  "newFeatureTitle": "Awesome new feature",
-  "newFeatureDesc": "Try our AI-based challenge generator!",
-
   "planToday": "Plan for today",
   "aiPlan": "AI plan",
   "catalogTasks": "Today's tasks",
   "addToPlan": "Add to plan",
   "addedToPlan": "Added to plan",
 
-  "devTestMessage": "Localization pipeline works!"
-,
-"devTestMessage": "Localization pipeline works!"
+  "close": "Close",
+  "newFeatureTitle": "Awesome new feature",
+  "newFeatureDesc": "Try our AI-based challenge generator!",
 
-,
-"testAuto": "Hello world"
+  "statsTitle": "Health stats",
+  "aiTest": "AI test",
 
+  "statsToday": "Today",
+  "statsYesterday": "Yesterday",
+  "stats7days": "7 days",
+  "aiAdviceToday": "Today’s tip",
+  "aiAdviceWeekly": "Weekly summary",
+  "aiAdviceNudge": "Reminder",
+
+
+
+  "devTestMessage": "Localization pipeline works!",
+  "testAuto": "Hello world"
 }

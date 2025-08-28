@@ -9,364 +9,394 @@ class AppLocalizationsEs extends AppLocalizations {
   AppLocalizationsEs([String locale = 'es']) : super(locale);
 
   @override
-  String get appTitle => 'OneBeauty';
+  String get appTitle => '[es] OneBeauty';
 
   @override
-  String get tabHealth => 'Salud';
+  String get tabHealth => '[es] Health';
 
   @override
-  String get tabStudio => 'Estudio';
+  String get tabStudio => '[es] Studio';
 
   @override
-  String get tabStore => 'Tienda';
+  String get tabStore => '[es] Store';
 
   @override
-  String get signOut => 'Cerrar sesión';
+  String get signOut => '[es] Sign out';
 
   @override
-  String get saved => 'Guardado';
+  String get saved => '[es] Saved';
 
   @override
-  String get save => 'Guardar';
+  String get save => '[es] Save';
 
   @override
-  String get language => 'Idioma';
+  String get language => '[es] Language';
 
   @override
-  String get profileTitle => 'Perfil';
+  String get profileTitle => '[es] Profile';
 
   @override
-  String get profileEmail => 'Correo';
+  String get profileEmail => '[es] Email';
 
   @override
-  String get profilePhone => 'Teléfono';
+  String get profilePhone => '[es] Phone';
 
   @override
-  String get profileDisplayName => 'Nombre visible';
+  String get profileDisplayName => '[es] Display name';
 
   @override
-  String get profileAccount => 'Cuenta';
+  String get profileAccount => '[es] Account';
 
   @override
-  String get obHealthTitle => 'Salud diaria';
+  String get obHealthTitle => '[es] Daily health';
 
   @override
-  String get obHealthText => 'Marca agua, pasos y sueño con metas simples.';
+  String get obHealthText =>
+      '[es] Track water, steps and sleep with simple daily checks.';
 
   @override
-  String get obStudioTitle => 'Estudio';
+  String get obStudioTitle => '[es] Studio';
 
   @override
-  String get obStudioText => 'Reserva sesiones y organiza tu agenda.';
+  String get obStudioText => '[es] Book sessions and keep your schedule tidy.';
 
   @override
-  String get obStoreTitle => 'Tienda';
+  String get obStoreTitle => '[es] Store';
 
   @override
-  String get obStoreText => 'Compra productos de cuidado en un solo lugar.';
+  String get obStoreText =>
+      '[es] Buy care products and accessories in one place.';
 
   @override
-  String get obSkip => 'Omitir';
+  String get obSkip => '[es] Skip';
 
   @override
-  String get obNext => 'Siguiente';
+  String get obNext => '[es] Next';
 
   @override
-  String get obStart => 'Empezar';
+  String get obStart => '[es] Start';
 
   @override
-  String get authTitle => 'Entrar / Registro';
+  String get authTitle => '[es] Sign in / Register';
 
   @override
-  String get authLoginTab => 'Entrar';
+  String get authLoginTab => '[es] Login';
 
   @override
-  String get authRegisterTab => 'Registrar';
+  String get authRegisterTab => '[es] Register';
 
   @override
-  String get authPhoneTab => 'Teléfono';
+  String get authPhoneTab => '[es] Phone';
 
   @override
-  String get authContinueGoogle => 'Continuar con Google';
+  String get authContinueGoogle => '[es] Continue with Google';
 
   @override
-  String get authEmail => 'Correo';
+  String get authEmail => '[es] Email';
 
   @override
-  String get authPassword => 'Contraseña';
+  String get authPassword => '[es] Password';
 
   @override
-  String get authSignIn => 'Entrar';
+  String get authSignIn => '[es] Sign in';
 
   @override
-  String get authCreateAccount => 'Crear cuenta';
+  String get authCreateAccount => '[es] Create account';
 
   @override
-  String get authPhone => 'Número de teléfono';
+  String get authPhone => '[es] Phone number';
 
   @override
-  String get authCodeHint => 'Código de verificación';
+  String get authCodeHint => '[es] Verification code';
 
   @override
-  String get authSendCode => 'Enviar código';
+  String get authSendCode => '[es] Send code';
 
   @override
-  String get greetHello => '¡Hola! 👋';
+  String get greetHello => '[es] Hello! 👋';
 
   @override
   String greetHelloName(String name) {
-    return '¡Hola, $name! 👋';
+    return '[es] Hello, $name! 👋';
   }
 
   @override
-  String get goalHintHealth => 'Pequeños pasos diarios: agua, pasos, sueño.';
+  String get goalHintHealth =>
+      '[es] Make small daily steps: water, steps, sleep.';
 
   @override
-  String get goalHintSkin => 'Pronto: seguimiento del cuidado de la piel y consejos.';
+  String get goalHintSkin => '[es] Skin-care tracker and tips are coming soon.';
 
   @override
-  String get goalHintFitness => 'Mantén la actividad: pasos, estiramientos, sueño.';
+  String get goalHintFitness => '[es] Keep active: steps, stretch, sleep.';
 
   @override
-  String get healthResetTooltip => 'Reiniciar comprobaciones de hoy';
+  String get healthResetTooltip => '[es] Reset today\'s checks';
 
   @override
-  String get surveyTitle => 'Cuestionario de salud';
+  String get surveyTitle => '[es] Quick survey';
 
   @override
-  String get surveyIntro => 'Toma menos de un minuto y ayuda a personalizar recomendaciones.';
+  String get surveyIntro =>
+      '[es] Takes under a minute and helps tailor recommendations.';
 
   @override
-  String get surveyBirthDate => 'Fecha de nacimiento';
+  String get surveyBirthDate => '[es] Birth date';
 
   @override
-  String get surveyPickDate => 'Elegir fecha';
+  String get surveyPickDate => '[es] Pick a date';
 
   @override
-  String get surveyGender => 'Género';
+  String get surveyGender => '[es] Gender';
 
   @override
-  String get surveyMale => 'Hombre';
+  String get surveyMale => '[es] Male';
 
   @override
-  String get surveyFemale => 'Mujer';
+  String get surveyFemale => '[es] Female';
 
   @override
-  String get surveyOther => 'Otro';
+  String get surveyOther => '[es] Other';
 
   @override
-  String get surveyGoal => 'Objetivo principal';
+  String get surveyGoal => '[es] Main goal';
 
   @override
-  String get surveyGoalHealth => 'Salud general';
+  String get surveyGoalHealth => '[es] Overall health';
 
   @override
-  String get surveyGoalSkin => 'Cuidado de la piel';
+  String get surveyGoalSkin => '[es] Skin care';
 
   @override
-  String get surveyGoalFitness => 'Forma física';
+  String get surveyGoalFitness => '[es] Fitness shape';
 
   @override
-  String get surveySaveContinue => 'Guardar y continuar';
+  String get surveySaveContinue => '[es] Save and continue';
 
   @override
-  String get surveyErrorFillAll => 'Por favor, completa todos los campos';
+  String get surveyErrorFillAll => '[es] Please fill all fields';
 
   @override
-  String get studioMessage => 'El Estudio estará disponible pronto.';
+  String get studioMessage => '[es] Studio is coming soon.';
 
   @override
-  String get storeMessage => 'La Tienda estará disponible pronto.';
+  String get storeMessage => '[es] Store is coming soon.';
 
   @override
-  String get taskWater => 'Bebe 8 vasos de agua 💧';
+  String get taskWater => '[es] Drink 8 glasses of water 💧';
 
   @override
-  String get taskSteps => 'Camina 6–8 mil pasos 🚶';
+  String get taskSteps => '[es] Walk 6–8k steps 🚶';
 
   @override
-  String get taskSleep => 'Acuéstate antes de las 23:00 😴';
+  String get taskSleep => '[es] Go to bed by 23:00 😴';
 
   @override
-  String get taskStretch => 'Estiramiento 5–10 min 🤸';
+  String get taskStretch => '[es] 5–10 min stretch 🤸';
 
   @override
-  String get taskMind => '5 min de atención plena 🧘';
+  String get taskMind => '[es] 5 min mindfulness 🧘';
 
   @override
-  String get authErrEmailPasswordRequired => 'Se requieren correo y contraseña';
+  String get authErrEmailPasswordRequired =>
+      '[es] Email and password are required';
 
   @override
-  String get authErrPhoneCodeRequired => 'Se requieren teléfono y código';
+  String get authErrPhoneCodeRequired => '[es] Phone and code are required';
 
   @override
-  String get authErrInvalidCode => 'Código inválido (usa 0000)';
+  String get authErrInvalidCode => '[es] Invalid code (use 0000)';
 
   @override
-  String get healthBannerText => '¡Hola! 👋 Pronto añadiremos un rastreador de cuidado de la piel y recomendaciones.';
+  String get healthBannerText =>
+      '[es] Hi there! 👋 We’ll add a skincare tracker and recommendations soon.';
 
   @override
-  String get resetToday => 'Restablecer marcados de hoy';
+  String get resetToday => '[es] Reset today’s checks';
 
   @override
   String healthProgress(int done, int total) {
-    return '$done de $total completado';
+    return '[es] $done of $total done';
   }
 
   @override
-  String get healthAllDone => '¡Todo listo por hoy! 🎉';
+  String get healthAllDone => '[es] All done for today! 🎉';
 
   @override
-  String get streakTitle => 'Tu racha';
+  String get streakTitle => '[es] Your streak';
 
   @override
   String streakDays(int days) {
-    return '$days días seguidos';
+    return '[es] $days days in a row';
   }
 
   @override
-  String get healthWeekTitle => 'Esta semana';
+  String get healthWeekTitle => '[es] This week';
 
   @override
   String healthDayDone(int done, int total) {
-    return '$done/$total';
+    return '[es] $done/$total';
   }
 
   @override
-  String get surveyNext => 'Siguiente';
+  String get surveyNext => '[es] Next';
 
   @override
-  String get surveyBack => 'Atrás';
+  String get surveyBack => '[es] Back';
 
   @override
-  String get surveySave => 'Guardar';
+  String get surveySave => '[es] Save';
 
   @override
-  String get surveyAge => 'Edad';
+  String get surveyAge => '[es] Age';
 
   @override
-  String get surveyFitness => 'Nivel físico';
+  String get surveyFitness => '[es] Fitness level';
 
   @override
-  String get surveyBeginner => 'Principiante';
+  String get surveyBeginner => '[es] Beginner';
 
   @override
-  String get surveyIntermediate => 'Intermedio';
+  String get surveyIntermediate => '[es] Intermediate';
 
   @override
-  String get surveyAdvanced => 'Avanzado';
+  String get surveyAdvanced => '[es] Advanced';
 
   @override
-  String get surveyGoals => 'Objetivos';
+  String get surveyGoals => '[es] Goals';
 
   @override
-  String get goalWeightLoss => 'Pérdida de peso';
+  String get goalWeightLoss => '[es] Weight loss';
 
   @override
-  String get goalBetterSleep => 'Mejor sueño';
+  String get goalBetterSleep => '[es] Better sleep';
 
   @override
-  String get goalEnergy => 'Más energía';
+  String get goalEnergy => '[es] More energy';
 
   @override
-  String get goalDiscipline => 'Disciplina';
+  String get goalDiscipline => '[es] Discipline';
 
   @override
-  String get goalStress => 'Menos estrés';
+  String get goalStress => '[es] Less stress';
 
   @override
-  String get surveyLifestyle => 'Estilo de vida';
+  String get surveyLifestyle => '[es] Lifestyle';
 
   @override
-  String get lifestyleSedentary => 'Sedentario';
+  String get lifestyleSedentary => '[es] Sedentary';
 
   @override
-  String get lifestyleActive => 'Activo';
+  String get lifestyleActive => '[es] Active';
 
   @override
-  String get surveyRestrictions => 'Restricciones';
+  String get surveyRestrictions => '[es] Restrictions';
 
   @override
-  String get rVegan => 'Vegano';
+  String get rVegan => '[es] Vegan';
 
   @override
-  String get rVegetarian => 'Vegetariano';
+  String get rVegetarian => '[es] Vegetarian';
 
   @override
-  String get rNoAlcohol => 'Sin alcohol';
+  String get rNoAlcohol => '[es] No alcohol';
 
   @override
-  String get rNoCaffeine => 'Sin cafeína';
+  String get rNoCaffeine => '[es] No caffeine';
 
   @override
-  String get rAllergyNuts => 'Alergia a frutos secos';
+  String get rAllergyNuts => '[es] Nut allergy';
 
   @override
-  String get rHypertension => 'Hipertensión';
+  String get rHypertension => '[es] Hypertension';
 
   @override
-  String get surveyBody => 'Parámetros corporales';
+  String get surveyBody => '[es] Body parameters';
 
   @override
-  String get surveyWeight => 'Peso (kg)';
+  String get surveyWeight => '[es] Weight (kg)';
 
   @override
-  String get surveyHeight => 'Altura (cm)';
+  String get surveyHeight => '[es] Height (cm)';
 
   @override
-  String get surveyStress => 'Nivel de estrés';
+  String get surveyStress => '[es] Stress level';
 
   @override
-  String get stressLow => 'Bajo';
+  String get stressLow => '[es] Low';
 
   @override
-  String get stressMedium => 'Medio';
+  String get stressMedium => '[es] Medium';
 
   @override
-  String get stressHigh => 'Alto';
+  String get stressHigh => '[es] High';
 
   @override
-  String get surveySleep => 'Calidad del sueño';
+  String get surveySleep => '[es] Sleep quality';
 
   @override
-  String get sleepPoor => 'Mala';
+  String get sleepPoor => '[es] Poor';
 
   @override
-  String get sleepAverage => 'Regular';
+  String get sleepAverage => '[es] Average';
 
   @override
-  String get sleepGood => 'Buena';
+  String get sleepGood => '[es] Good';
 
   @override
-  String get planTomorrow => 'Plan para mañana';
+  String get planTomorrow => '[es] Plan for tomorrow';
 
   @override
-  String get close => 'Cerrar';
+  String get planToday => '[es] Plan for today';
 
   @override
-  String get newFeatureTitle => 'Awesome new feature';
+  String get aiPlan => '[es] AI plan';
 
   @override
-  String get newFeatureDesc => 'Try our AI-based challenge generator!';
+  String get catalogTasks => '[es] Today\'s tasks';
 
   @override
-  String get planToday => 'Plan for today';
+  String get addToPlan => '[es] Add to plan';
 
   @override
-  String get aiPlan => 'AI plan';
+  String get addedToPlan => '[es] Added to plan';
 
   @override
-  String get catalogTasks => 'Today\'s tasks';
+  String get close => '[es] Close';
 
   @override
-  String get addToPlan => 'Add to plan';
+  String get newFeatureTitle => '[es] Awesome new feature';
 
   @override
-  String get addedToPlan => 'Added to plan';
+  String get newFeatureDesc => '[es] Try our AI-based challenge generator!';
 
   @override
-  String get devTestMessage => 'Localization pipeline works!';
+  String get statsTitle => '[es] Health stats';
 
   @override
-  String get testAuto => 'Hello world';
+  String get aiTest => '[es] AI test';
+
+  @override
+  String get statsToday => '[es] Today';
+
+  @override
+  String get statsYesterday => '[es] Yesterday';
+
+  @override
+  String get stats7days => '[es] 7 days';
+
+  @override
+  String get aiAdviceToday => '[es] Today’s tip';
+
+  @override
+  String get aiAdviceWeekly => '[es] Weekly summary';
+
+  @override
+  String get aiAdviceNudge => '[es] Reminder';
+
+  @override
+  String get devTestMessage => '[es] Localization pipeline works!';
+
+  @override
+  String get testAuto => '[es] Hello world';
 }

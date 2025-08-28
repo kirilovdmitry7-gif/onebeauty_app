@@ -9,364 +9,394 @@ class AppLocalizationsRu extends AppLocalizations {
   AppLocalizationsRu([String locale = 'ru']) : super(locale);
 
   @override
-  String get appTitle => 'OneBeauty';
+  String get appTitle => '[ru] OneBeauty';
 
   @override
-  String get tabHealth => 'Здоровье';
+  String get tabHealth => '[ru] Health';
 
   @override
-  String get tabStudio => 'Студия';
+  String get tabStudio => '[ru] Studio';
 
   @override
-  String get tabStore => 'Магазин';
+  String get tabStore => '[ru] Store';
 
   @override
-  String get signOut => 'Выйти';
+  String get signOut => '[ru] Sign out';
 
   @override
-  String get saved => 'Сохранено';
+  String get saved => '[ru] Saved';
 
   @override
-  String get save => 'Сохранить';
+  String get save => '[ru] Save';
 
   @override
-  String get language => 'Язык';
+  String get language => '[ru] Language';
 
   @override
-  String get profileTitle => 'Профиль';
+  String get profileTitle => '[ru] Profile';
 
   @override
-  String get profileEmail => 'Email';
+  String get profileEmail => '[ru] Email';
 
   @override
-  String get profilePhone => 'Телефон';
+  String get profilePhone => '[ru] Phone';
 
   @override
-  String get profileDisplayName => 'Отображаемое имя';
+  String get profileDisplayName => '[ru] Display name';
 
   @override
-  String get profileAccount => 'Аккаунт';
+  String get profileAccount => '[ru] Account';
 
   @override
-  String get obHealthTitle => 'Ежедневное здоровье';
+  String get obHealthTitle => '[ru] Daily health';
 
   @override
-  String get obHealthText => 'Отмечай воду, шаги и сон — простые ежедневные цели.';
+  String get obHealthText =>
+      '[ru] Track water, steps and sleep with simple daily checks.';
 
   @override
-  String get obStudioTitle => 'Студия';
+  String get obStudioTitle => '[ru] Studio';
 
   @override
-  String get obStudioText => 'Записывайся на сессии и веди расписание.';
+  String get obStudioText => '[ru] Book sessions and keep your schedule tidy.';
 
   @override
-  String get obStoreTitle => 'Магазин';
+  String get obStoreTitle => '[ru] Store';
 
   @override
-  String get obStoreText => 'Покупай уход и аксессуары в одном месте.';
+  String get obStoreText =>
+      '[ru] Buy care products and accessories in one place.';
 
   @override
-  String get obSkip => 'Пропустить';
+  String get obSkip => '[ru] Skip';
 
   @override
-  String get obNext => 'Далее';
+  String get obNext => '[ru] Next';
 
   @override
-  String get obStart => 'Начать';
+  String get obStart => '[ru] Start';
 
   @override
-  String get authTitle => 'Вход / Регистрация';
+  String get authTitle => '[ru] Sign in / Register';
 
   @override
-  String get authLoginTab => 'Вход';
+  String get authLoginTab => '[ru] Login';
 
   @override
-  String get authRegisterTab => 'Регистрация';
+  String get authRegisterTab => '[ru] Register';
 
   @override
-  String get authPhoneTab => 'Телефон';
+  String get authPhoneTab => '[ru] Phone';
 
   @override
-  String get authContinueGoogle => 'Продолжить через Google';
+  String get authContinueGoogle => '[ru] Continue with Google';
 
   @override
-  String get authEmail => 'Email';
+  String get authEmail => '[ru] Email';
 
   @override
-  String get authPassword => 'Пароль';
+  String get authPassword => '[ru] Password';
 
   @override
-  String get authSignIn => 'Войти';
+  String get authSignIn => '[ru] Sign in';
 
   @override
-  String get authCreateAccount => 'Создать аккаунт';
+  String get authCreateAccount => '[ru] Create account';
 
   @override
-  String get authPhone => 'Номер телефона';
+  String get authPhone => '[ru] Phone number';
 
   @override
-  String get authCodeHint => 'Код подтверждения';
+  String get authCodeHint => '[ru] Verification code';
 
   @override
-  String get authSendCode => 'Отправить код';
+  String get authSendCode => '[ru] Send code';
 
   @override
-  String get greetHello => 'Привет! 👋';
+  String get greetHello => '[ru] Hello! 👋';
 
   @override
   String greetHelloName(String name) {
-    return 'Привет, $name! 👋';
+    return '[ru] Hello, $name! 👋';
   }
 
   @override
-  String get goalHintHealth => 'Делай маленькие шаги каждый день: вода, шаги, сон.';
+  String get goalHintHealth =>
+      '[ru] Make small daily steps: water, steps, sleep.';
 
   @override
-  String get goalHintSkin => 'Скоро добавим трекер ухода за кожей и рекомендации.';
+  String get goalHintSkin => '[ru] Skin-care tracker and tips are coming soon.';
 
   @override
-  String get goalHintFitness => 'Поддерживай активность: шаги, растяжка, сон.';
+  String get goalHintFitness => '[ru] Keep active: steps, stretch, sleep.';
 
   @override
-  String get healthResetTooltip => 'Сбросить отметки на сегодня';
+  String get healthResetTooltip => '[ru] Reset today\'s checks';
 
   @override
-  String get surveyTitle => 'Анкета здоровья';
+  String get surveyTitle => '[ru] Quick survey';
 
   @override
-  String get surveyIntro => 'Займёт менее минуты и поможет подобрать рекомендации.';
+  String get surveyIntro =>
+      '[ru] Takes under a minute and helps tailor recommendations.';
 
   @override
-  String get surveyBirthDate => 'Дата рождения';
+  String get surveyBirthDate => '[ru] Birth date';
 
   @override
-  String get surveyPickDate => 'Выбрать дату';
+  String get surveyPickDate => '[ru] Pick a date';
 
   @override
-  String get surveyGender => 'Пол';
+  String get surveyGender => '[ru] Gender';
 
   @override
-  String get surveyMale => 'Мужской';
+  String get surveyMale => '[ru] Male';
 
   @override
-  String get surveyFemale => 'Женский';
+  String get surveyFemale => '[ru] Female';
 
   @override
-  String get surveyOther => 'Другое';
+  String get surveyOther => '[ru] Other';
 
   @override
-  String get surveyGoal => 'Основная цель';
+  String get surveyGoal => '[ru] Main goal';
 
   @override
-  String get surveyGoalHealth => 'Общее здоровье';
+  String get surveyGoalHealth => '[ru] Overall health';
 
   @override
-  String get surveyGoalSkin => 'Уход за кожей';
+  String get surveyGoalSkin => '[ru] Skin care';
 
   @override
-  String get surveyGoalFitness => 'Фитнес‑форма';
+  String get surveyGoalFitness => '[ru] Fitness shape';
 
   @override
-  String get surveySaveContinue => 'Сохранить и продолжить';
+  String get surveySaveContinue => '[ru] Save and continue';
 
   @override
-  String get surveyErrorFillAll => 'Пожалуйста, заполните все поля';
+  String get surveyErrorFillAll => '[ru] Please fill all fields';
 
   @override
-  String get studioMessage => 'Studio появится совсем скоро.';
+  String get studioMessage => '[ru] Studio is coming soon.';
 
   @override
-  String get storeMessage => 'Store появится совсем скоро.';
+  String get storeMessage => '[ru] Store is coming soon.';
 
   @override
-  String get taskWater => 'Выпей 8 стаканов воды 💧';
+  String get taskWater => '[ru] Drink 8 glasses of water 💧';
 
   @override
-  String get taskSteps => 'Пройди 6–8 тысяч шагов 🚶';
+  String get taskSteps => '[ru] Walk 6–8k steps 🚶';
 
   @override
-  String get taskSleep => 'Ложись спать до 23:00 😴';
+  String get taskSleep => '[ru] Go to bed by 23:00 😴';
 
   @override
-  String get taskStretch => 'Растяжка 5–10 минут 🤸';
+  String get taskStretch => '[ru] 5–10 min stretch 🤸';
 
   @override
-  String get taskMind => 'Осознанность 5 минут 🧘';
+  String get taskMind => '[ru] 5 min mindfulness 🧘';
 
   @override
-  String get authErrEmailPasswordRequired => 'Нужны email и пароль';
+  String get authErrEmailPasswordRequired =>
+      '[ru] Email and password are required';
 
   @override
-  String get authErrPhoneCodeRequired => 'Нужны телефон и код';
+  String get authErrPhoneCodeRequired => '[ru] Phone and code are required';
 
   @override
-  String get authErrInvalidCode => 'Неверный код (используйте 0000)';
+  String get authErrInvalidCode => '[ru] Invalid code (use 0000)';
 
   @override
-  String get healthBannerText => 'Привет, ага! 👋 Скоро добавим трекер ухода за кожей и рекомендации.';
+  String get healthBannerText =>
+      '[ru] Hi there! 👋 We’ll add a skincare tracker and recommendations soon.';
 
   @override
-  String get resetToday => 'Сбросить отметки за сегодня';
+  String get resetToday => '[ru] Reset today’s checks';
 
   @override
   String healthProgress(int done, int total) {
-    return 'Выполнено $done из $total';
+    return '[ru] $done of $total done';
   }
 
   @override
-  String get healthAllDone => 'На сегодня всё! 🎉';
+  String get healthAllDone => '[ru] All done for today! 🎉';
 
   @override
-  String get streakTitle => 'Ваша серия';
+  String get streakTitle => '[ru] Your streak';
 
   @override
   String streakDays(int days) {
-    return '$days дней подряд';
+    return '[ru] $days days in a row';
   }
 
   @override
-  String get healthWeekTitle => 'Эта неделя';
+  String get healthWeekTitle => '[ru] This week';
 
   @override
   String healthDayDone(int done, int total) {
-    return '$done/$total';
+    return '[ru] $done/$total';
   }
 
   @override
-  String get surveyNext => 'Далее';
+  String get surveyNext => '[ru] Next';
 
   @override
-  String get surveyBack => 'Назад';
+  String get surveyBack => '[ru] Back';
 
   @override
-  String get surveySave => 'Сохранить';
+  String get surveySave => '[ru] Save';
 
   @override
-  String get surveyAge => 'Возраст';
+  String get surveyAge => '[ru] Age';
 
   @override
-  String get surveyFitness => 'Уровень подготовки';
+  String get surveyFitness => '[ru] Fitness level';
 
   @override
-  String get surveyBeginner => 'Новичок';
+  String get surveyBeginner => '[ru] Beginner';
 
   @override
-  String get surveyIntermediate => 'Средний';
+  String get surveyIntermediate => '[ru] Intermediate';
 
   @override
-  String get surveyAdvanced => 'Продвинутый';
+  String get surveyAdvanced => '[ru] Advanced';
 
   @override
-  String get surveyGoals => 'Цели';
+  String get surveyGoals => '[ru] Goals';
 
   @override
-  String get goalWeightLoss => 'Снижение веса';
+  String get goalWeightLoss => '[ru] Weight loss';
 
   @override
-  String get goalBetterSleep => 'Лучший сон';
+  String get goalBetterSleep => '[ru] Better sleep';
 
   @override
-  String get goalEnergy => 'Больше энергии';
+  String get goalEnergy => '[ru] More energy';
 
   @override
-  String get goalDiscipline => 'Дисциплина';
+  String get goalDiscipline => '[ru] Discipline';
 
   @override
-  String get goalStress => 'Меньше стресса';
+  String get goalStress => '[ru] Less stress';
 
   @override
-  String get surveyLifestyle => 'Образ жизни';
+  String get surveyLifestyle => '[ru] Lifestyle';
 
   @override
-  String get lifestyleSedentary => 'Сидячий';
+  String get lifestyleSedentary => '[ru] Sedentary';
 
   @override
-  String get lifestyleActive => 'Активный';
+  String get lifestyleActive => '[ru] Active';
 
   @override
-  String get surveyRestrictions => 'Ограничения';
+  String get surveyRestrictions => '[ru] Restrictions';
 
   @override
-  String get rVegan => 'Веган';
+  String get rVegan => '[ru] Vegan';
 
   @override
-  String get rVegetarian => 'Вегетарианец';
+  String get rVegetarian => '[ru] Vegetarian';
 
   @override
-  String get rNoAlcohol => 'Без алкоголя';
+  String get rNoAlcohol => '[ru] No alcohol';
 
   @override
-  String get rNoCaffeine => 'Без кофеина';
+  String get rNoCaffeine => '[ru] No caffeine';
 
   @override
-  String get rAllergyNuts => 'Аллергия на орехи';
+  String get rAllergyNuts => '[ru] Nut allergy';
 
   @override
-  String get rHypertension => 'Гипертония';
+  String get rHypertension => '[ru] Hypertension';
 
   @override
-  String get surveyBody => 'Параметры тела';
+  String get surveyBody => '[ru] Body parameters';
 
   @override
-  String get surveyWeight => 'Вес (кг)';
+  String get surveyWeight => '[ru] Weight (kg)';
 
   @override
-  String get surveyHeight => 'Рост (см)';
+  String get surveyHeight => '[ru] Height (cm)';
 
   @override
-  String get surveyStress => 'Уровень стресса';
+  String get surveyStress => '[ru] Stress level';
 
   @override
-  String get stressLow => 'Низкий';
+  String get stressLow => '[ru] Low';
 
   @override
-  String get stressMedium => 'Средний';
+  String get stressMedium => '[ru] Medium';
 
   @override
-  String get stressHigh => 'Высокий';
+  String get stressHigh => '[ru] High';
 
   @override
-  String get surveySleep => 'Качество сна';
+  String get surveySleep => '[ru] Sleep quality';
 
   @override
-  String get sleepPoor => 'Плохой';
+  String get sleepPoor => '[ru] Poor';
 
   @override
-  String get sleepAverage => 'Средний';
+  String get sleepAverage => '[ru] Average';
 
   @override
-  String get sleepGood => 'Хороший';
+  String get sleepGood => '[ru] Good';
 
   @override
-  String get planTomorrow => 'План на завтра';
+  String get planTomorrow => '[ru] Plan for tomorrow';
 
   @override
-  String get close => 'Закрыть';
+  String get planToday => '[ru] Plan for today';
 
   @override
-  String get newFeatureTitle => '';
+  String get aiPlan => '[ru] AI plan';
 
   @override
-  String get newFeatureDesc => '';
+  String get catalogTasks => '[ru] Today\'s tasks';
 
   @override
-  String get planToday => '';
+  String get addToPlan => '[ru] Add to plan';
 
   @override
-  String get aiPlan => 'AI plan';
+  String get addedToPlan => '[ru] Added to plan';
 
   @override
-  String get catalogTasks => '';
+  String get close => '[ru] Close';
 
   @override
-  String get addToPlan => '';
+  String get newFeatureTitle => '[ru] Awesome new feature';
 
   @override
-  String get addedToPlan => '';
+  String get newFeatureDesc => '[ru] Try our AI-based challenge generator!';
 
   @override
-  String get devTestMessage => '';
+  String get statsTitle => '[ru] Health stats';
 
   @override
-  String get testAuto => '';
+  String get aiTest => '[ru] AI test';
+
+  @override
+  String get statsToday => '[ru] Today';
+
+  @override
+  String get statsYesterday => '[ru] Yesterday';
+
+  @override
+  String get stats7days => '[ru] 7 days';
+
+  @override
+  String get aiAdviceToday => '[ru] Today’s tip';
+
+  @override
+  String get aiAdviceWeekly => '[ru] Weekly summary';
+
+  @override
+  String get aiAdviceNudge => '[ru] Reminder';
+
+  @override
+  String get devTestMessage => '[ru] Localization pipeline works!';
+
+  @override
+  String get testAuto => '[ru] Hello world';
 }

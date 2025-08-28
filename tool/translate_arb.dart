@@ -1,189 +1,175 @@
-// tool/translate_arb.dart
-//
-// Использование:
-//   dart run tool/translate_arb.dart ru es
-//
-// Требуется .env в корне проекта с как минимум:
-//   OPENAI_API_KEY=sk-...          (обязательно)
-//   OPENAI_ORGANIZATION=org_...    (необязательно)
-//   OPENAI_PROJECT=proj_...        (необязательно)
+// A tiny ARB sync/translate helper.
 //
 // Что делает:
-// 1) Читает en-файл (lib/l10n/app_en.arb) как источник истины
-// 2) Для каждого языка из аргументов читает lib/l10n/app_<lang>.arb
-// 3) Находит ключи, которых нет в целевом .arb
-// 4) Просит OpenAI перевести ТОЛЬКО недостающие ключи
-// 5) Мерджит и сохраняет, сортируя ключи
+// - Берёт lib/l10n/app_en.arb как источник истины.
+// - Для каждого другого app_*.arb (ru, es, ...):
+//   * Добавляет недостающие ключи из EN (значение копируется из EN, чтобы UI не падал).
+//   * Копирует @-метаданные (placeholders, description) из EN.
+//   * Помечает добавленные ключи в метаданных x-translationState="pending".
+//   * Сохраняет существующие переводы и лишние ключи (ничего не удаляет).
+//
+// Запуск:
+//   dart run tool/translate_arb.dart
+//
+// Затем перегенерируй локализации:
+//   flutter gen-l10n
+//
+// Зависимостей нет.
 
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:http/http.dart' as http;
-import 'package:dotenv/dotenv.dart';
+const String l10nDir = 'lib/l10n';
+const String baseFile = 'app_en.arb';
 
-const String _arbDir = 'lib/l10n';
-const String _enFile = 'app_en.arb';
+final JsonEncoder _encoder = const JsonEncoder.withIndent('  ');
 
-Future<void> main(List<String> args) async {
-  if (args.isEmpty) {
-    stderr.writeln('Usage: dart run tool/translate_arb.dart <lang1> <lang2> ...');
-    exit(1);
+void main(List<String> args) async {
+  final basePath = '$l10nDir/$baseFile';
+  final baseHandle = File(basePath);
+  if (!await baseHandle.exists()) {
+    stderr.writeln('❌ Not found: $basePath');
+    exit(2);
   }
 
-  // 0) Загружаем .env
-  final env = DotEnv()..load();
-  final apiKey =
-      env['OPENAI_API_KEY'] ?? Platform.environment['OPENAI_API_KEY'];
-  if (apiKey == null || apiKey.isEmpty) {
-    stderr.writeln('Нет OPENAI_API_KEY. Укажи в .env или через переменные окружения.');
-    exit(1);
-  }
-  final openaiOrg =
-      env['OPENAI_ORGANIZATION'] ?? Platform.environment['OPENAI_ORGANIZATION'];
-  final openaiProj =
-      env['OPENAI_PROJECT'] ?? Platform.environment['OPENAI_PROJECT'];
+  final Map<String, dynamic> base = _readJson(basePath);
+  stdout.writeln('🌐 Base locale: en ($baseFile)');
 
-  // 1) Читаем en-источник
-  final enPath = '$_arbDir/$_enFile';
-  final enMap = await _readArb(enPath);
-
-  for (final lang in args) {
-    final targetPath = '$_arbDir/app_$lang.arb';
-
-    final targetMap = await _readArb(targetPath);
-    final missing = _diffMissing(enMap, targetMap);
-
-    if (missing.isEmpty) {
-      print('[$lang] Нет ключей для перевода — пропускаю');
-      continue;
-    }
-
-    print('[$lang] Нужно перевести ${missing.length} ключ(ей)');
-
-    // 2) Переводим недостающие значения
-    final translations = await _translateBatch(
-      apiKey: apiKey,
-      org: openaiOrg,
-      project: openaiProj,
-      sourceLang: 'en',
-      targetLang: lang,
-      keysToValues: missing,
-    );
-
-    // 3) Мерджим и сохраняем
-    final merged = Map<String, dynamic>.from(targetMap)..addAll(translations);
-    final sorted = Map<String, dynamic>.fromEntries(
-      merged.entries.toList()
-        ..sort((a, b) => a.key.compareTo(b.key)),
-    );
-
-    await _writeArb(targetPath, sorted);
-    print('[$lang] Обновлён: $targetPath');
+  final dir = Directory(l10nDir);
+  if (!await dir.exists()) {
+    stderr.writeln('❌ Directory not found: $l10nDir');
+    exit(2);
   }
 
-  print('Готово! Сгенерируй локализации:');
-  print('flutter gen-l10n --arb-dir=$_arbDir --output-dir=$_arbDir/gen');
+  final targetFiles = <File>[];
+  await for (final ent in dir.list()) {
+    if (ent is! File) continue;
+    if (!ent.path.endsWith('.arb')) continue;
+    final basename = ent.path.split(Platform.pathSeparator).last;
+    if (basename == baseFile) continue; // пропускаем app_en.arb
+    targetFiles.add(ent);
+  }
+
+  if (targetFiles.isEmpty) {
+    stdout.writeln(
+        '⚠️  No target ARB files found in $l10nDir (only $baseFile present).');
+    return;
+  }
+
+  int totalAdded = 0;
+
+  for (final f in targetFiles) {
+    final locale = _inferLocaleFromFile(f.path) ?? '??';
+    stdout.writeln('\n———\n📝 Processing ${f.path} (locale: $locale)');
+
+    final target = _readJson(f.path);
+    final outcome = _mergeArb(base, target, locale);
+
+    final sink = f.openWrite();
+    sink.write(_encoder.convert(outcome.map));
+    sink.writeln(); // newline at EOF
+    await sink.flush();
+    await sink.close();
+
+    stdout.writeln('✅ Updated ${f.path}. Added ${outcome.added} key(s).');
+    totalAdded += outcome.added;
+  }
+
+  stdout.writeln('\n🎉 Done. Total added: $totalAdded.');
+  stdout.writeln('👉 Now run:  flutter gen-l10n');
 }
 
-Future<Map<String, dynamic>> _readArb(String path) async {
-  final file = File(path);
-  if (!await file.exists()) return <String, dynamic>{};
-  final text = await file.readAsString();
-  final data = json.decode(text);
-  if (data is Map<String, dynamic>) return data;
+/// Читает JSON как Map<String, dynamic>. Ошибка → пустая map.
+Map<String, dynamic> _readJson(String path) {
+  try {
+    final text = File(path).readAsStringSync();
+    final obj = jsonDecode(text);
+    if (obj is Map<String, dynamic>) return obj;
+  } catch (e) {
+    stderr.writeln('❌ JSON parse error in $path: $e');
+  }
   return <String, dynamic>{};
 }
 
-Future<void> _writeArb(String path, Map<String, dynamic> map) async {
-  final file = File(path);
-  final encoder = const JsonEncoder.withIndent('  ');
-  await file.writeAsString(encoder.convert(map) + '\n');
+/// Результат слияния.
+class MergeOutcome {
+  final Map<String, dynamic> map;
+  final int added;
+  MergeOutcome(this.map, this.added);
 }
 
-/// Возвращает карту недостающих ключей: ключ -> EN-значение
-Map<String, String> _diffMissing(
+/// Сливает EN → target, сохраняя переводы и порядок ключей из EN.
+MergeOutcome _mergeArb(
   Map<String, dynamic> en,
   Map<String, dynamic> target,
+  String targetLocale,
 ) {
-  final out = <String, String>{};
-  for (final entry in en.entries) {
-    final k = entry.key;
-    final v = entry.value;
-    if (!_isTranslatableKey(k)) continue;
-    if (!target.containsKey(k)) {
-      out[k] = v.toString();
+  final out = <String, dynamic>{};
+  int added = 0;
+
+  // 1) Идём в порядке ключей EN
+  for (final key in en.keys) {
+    if (key.startsWith('@')) {
+      // МЕТАДАННЫЕ
+      final metaEn = en[key];
+      final metaTarget = target[key];
+
+      final mergedMeta = <String, dynamic>{};
+      if (metaEn is Map) {
+        mergedMeta.addAll(Map<String, dynamic>.from(metaEn));
+      }
+      if (metaTarget is Map) {
+        final mt = Map<String, dynamic>.from(metaTarget);
+        // Если в target было своё описание — сохраняем его.
+        if (mt['description'] != null) {
+          mergedMeta['description'] = mt['description'];
+        }
+        // Сохраняем любые доп. поля (кроме placeholders/description — для них приоритет как выше).
+        for (final entry in mt.entries) {
+          final mk = entry.key;
+          if (mk == 'placeholders' || mk == 'description') continue;
+          mergedMeta[mk] = entry.value;
+        }
+      }
+      out[key] = mergedMeta;
+      continue;
+    }
+
+    // Обычное сообщение
+    if (target.containsKey(key)) {
+      // Есть перевод — берём его
+      out[key] = target[key];
+    } else {
+      // Нет перевода — копируем EN (чтобы UI не ломался) и помечаем "pending"
+      out[key] = en[key];
+      added++;
+
+      final metaKey = '@$key';
+      final metaEn = en[metaKey];
+      final newMeta = <String, dynamic>{};
+      if (metaEn is Map) {
+        newMeta.addAll(Map<String, dynamic>.from(metaEn));
+      }
+      newMeta['x-translationState'] = 'pending';
+      newMeta['x-note'] =
+          'auto-copied from en on ${DateTime.now().toIso8601String().split("T").first}';
+      out[metaKey] = newMeta;
     }
   }
-  return out;
-}
 
-/// Фильтруем служебные ключи .arb
-bool _isTranslatableKey(String key) {
-  // Игнорируем метаданные и плейсхолдеры с @
-  if (key.startsWith('@')) return false;
-  // При необходимости сюда можно добавить исключения:
-  // if (key == '@@locale' || key == '@@last_modified') return false;
-  return true;
-}
-
-/// Переводим пачкой. Просим модель вернуть JSON вида { "key": "перевод", ... }
-Future<Map<String, String>> _translateBatch({
-  required String apiKey,
-  String? org,
-  String? project,
-  required String sourceLang,
-  required String targetLang,
-  required Map<String, String> keysToValues,
-}) async {
-  // Формируем инструкцию — просим вернуть ТОЛЬКО JSON без лишнего текста.
-  final system = '''
-You are a professional app localizer. Translate values from $sourceLang to $targetLang.
-Return ONLY a valid JSON object mapping keys to translated strings. 
-Do not add any commentary. 
-Preserve placeholders like {name}, {count}. Keep emojis and punctuation. Use concise, natural UI wording.
-''';
-
-  // Собираем полезную нагрузку как JSON строку
-  final payload = jsonEncode(keysToValues);
-
-  final body = jsonEncode({
-    'model': 'gpt-4o-mini',
-    'messages': [
-      {'role': 'system', 'content': system},
-      {
-        'role': 'user',
-        'content':
-            'Translate the following JSON map (keys must be kept the same, values translated):\n$payload'
-      }
-    ],
-    'temperature': 0.2,
-    'response_format': {'type': 'json_object'},
-  });
-
-  final headers = <String, String>{
-    'Authorization': 'Bearer $apiKey',
-    'Content-Type': 'application/json',
-  };
-  if (org != null && org.isNotEmpty) headers['OpenAI-Organization'] = org;
-  if (project != null && project.isNotEmpty) headers['OpenAI-Project'] = project;
-
-  final uri = Uri.parse('https://api.openai.com/v1/chat/completions');
-  final resp = await http.post(uri, headers: headers, body: body);
-
-  if (resp.statusCode != 200) {
-    stderr.writeln('Exception: Ошибка перевода (${resp.statusCode}): ${resp.body}');
-    throw Exception('OpenAI error ${resp.statusCode}');
+  // 2) Добавляем ключи, которые есть только в target (ничего не теряем)
+  for (final key in target.keys) {
+    if (!out.containsKey(key)) {
+      out[key] = target[key];
+    }
   }
 
-  final jsonResp = jsonDecode(resp.body) as Map<String, dynamic>;
-  final content = (jsonResp['choices'] as List).first['message']['content'] as String;
+  return MergeOutcome(out, added);
+}
 
-  // Парсим ответ как JSON-объект
-  final decoded = jsonDecode(content);
-  if (decoded is! Map<String, dynamic>) {
-    throw Exception('Unexpected response format from OpenAI');
-  }
-
-  // Приводим к Map<String, String>
-  return decoded.map((k, v) => MapEntry(k.toString(), v.toString()));
+/// Из пути вида lib/l10n/app_ru.arb → ru
+String? _inferLocaleFromFile(String path) {
+  final name = path.split(Platform.pathSeparator).last; // app_ru.arb
+  final match = RegExp(r'app_([a-zA-Z_-]+)\.arb$').firstMatch(name);
+  return match?.group(1);
 }

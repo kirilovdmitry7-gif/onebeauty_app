@@ -51,7 +51,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get obHealthTitle => 'Daily health';
 
   @override
-  String get obHealthText => 'Track water, steps and sleep with simple daily checks.';
+  String get obHealthText =>
+      'Track water, steps and sleep with simple daily checks.';
 
   @override
   String get obStudioTitle => 'Studio';
@@ -134,7 +135,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get surveyTitle => 'Quick survey';
 
   @override
-  String get surveyIntro => 'Takes under a minute and helps tailor recommendations.';
+  String get surveyIntro =>
+      'Takes under a minute and helps tailor recommendations.';
 
   @override
   String get surveyBirthDate => 'Birth date';
@@ -203,7 +205,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get authErrInvalidCode => 'Invalid code (use 0000)';
 
   @override
-  String get healthBannerText => 'Hi there! 👋 We’ll add a skincare tracker and recommendations soon.';
+  String get healthBannerText =>
+      'Hi there! 👋 We’ll add a skincare tracker and recommendations soon.';
 
   @override
   String get resetToday => 'Reset today’s checks';
@@ -341,15 +344,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get planTomorrow => 'Plan for tomorrow';
 
   @override
-  String get close => 'Close';
-
-  @override
-  String get newFeatureTitle => 'Awesome new feature';
-
-  @override
-  String get newFeatureDesc => 'Try our AI-based challenge generator!';
-
-  @override
   String get planToday => 'Plan for today';
 
   @override
@@ -363,6 +357,39 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get addedToPlan => 'Added to plan';
+
+  @override
+  String get close => 'Close';
+
+  @override
+  String get newFeatureTitle => 'Awesome new feature';
+
+  @override
+  String get newFeatureDesc => 'Try our AI-based challenge generator!';
+
+  @override
+  String get statsTitle => 'Health stats';
+
+  @override
+  String get aiTest => 'AI test';
+
+  @override
+  String get statsToday => 'Today';
+
+  @override
+  String get statsYesterday => 'Yesterday';
+
+  @override
+  String get stats7days => '7 days';
+
+  @override
+  String get aiAdviceToday => 'Today’s tip';
+
+  @override
+  String get aiAdviceWeekly => 'Weekly summary';
+
+  @override
+  String get aiAdviceNudge => 'Reminder';
 
   @override
   String get devTestMessage => 'Localization pipeline works!';

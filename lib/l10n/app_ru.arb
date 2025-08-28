@@ -1,78 +1,465 @@
 {
-  "appTitle": "OneBeauty",
-  "tabHealth": "Здоровье",
-  "tabStudio": "Студия",
-  "tabStore": "Магазин",
-  "signOut": "Выйти",
-  "saved": "Сохранено",
-  "save": "Сохранить",
-  "language": "Язык",
-  "profileTitle": "Профиль",
-  "profileEmail": "Email",
-  "profilePhone": "Телефон",
-  "profileDisplayName": "Отображаемое имя",
-  "profileAccount": "Аккаунт",
-  "obHealthTitle": "Ежедневное здоровье",
-  "obHealthText": "Отмечай воду, шаги и сон — простые ежедневные цели.",
-  "obStudioTitle": "Студия",
-  "obStudioText": "Записывайся на сессии и веди расписание.",
-  "obStoreTitle": "Магазин",
-  "obStoreText": "Покупай уход и аксессуары в одном месте.",
-  "obSkip": "Пропустить",
-  "obNext": "Далее",
-  "obStart": "Начать",
-  "authTitle": "Вход / Регистрация",
-  "authLoginTab": "Вход",
-  "authRegisterTab": "Регистрация",
-  "authPhoneTab": "Телефон",
-  "authContinueGoogle": "Продолжить через Google",
-  "authEmail": "Email",
-  "authPassword": "Пароль",
-  "authSignIn": "Войти",
-  "authCreateAccount": "Создать аккаунт",
-  "authPhone": "Номер телефона",
-  "authCodeHint": "Код подтверждения",
-  "authSendCode": "Отправить код",
-  "greetHello": "Привет! 👋",
-  "greetHelloName": "Привет, {name}! 👋",
+  "appTitle": "[ru] OneBeauty",
+  "tabHealth": "[ru] Health",
+  "tabStudio": "[ru] Studio",
+  "tabStore": "[ru] Store",
+  "signOut": "[ru] Sign out",
+  "saved": "[ru] Saved",
+  "save": "[ru] Save",
+  "language": "[ru] Language",
+  "profileTitle": "[ru] Profile",
+  "profileEmail": "[ru] Email",
+  "profilePhone": "[ru] Phone",
+  "profileDisplayName": "[ru] Display name",
+  "profileAccount": "[ru] Account",
+  "obHealthTitle": "[ru] Daily health",
+  "obHealthText": "[ru] Track water, steps and sleep with simple daily checks.",
+  "obStudioTitle": "[ru] Studio",
+  "obStudioText": "[ru] Book sessions and keep your schedule tidy.",
+  "obStoreTitle": "[ru] Store",
+  "obStoreText": "[ru] Buy care products and accessories in one place.",
+  "obSkip": "[ru] Skip",
+  "obNext": "[ru] Next",
+  "obStart": "[ru] Start",
+  "authTitle": "[ru] Sign in / Register",
+  "authLoginTab": "[ru] Login",
+  "authRegisterTab": "[ru] Register",
+  "authPhoneTab": "[ru] Phone",
+  "authContinueGoogle": "[ru] Continue with Google",
+  "authEmail": "[ru] Email",
+  "authPassword": "[ru] Password",
+  "authSignIn": "[ru] Sign in",
+  "authCreateAccount": "[ru] Create account",
+  "authPhone": "[ru] Phone number",
+  "authCodeHint": "[ru] Verification code",
+  "authSendCode": "[ru] Send code",
+  "greetHello": "[ru] Hello! 👋",
+  "greetHelloName": "[ru] Hello, {name}! 👋",
+  "goalHintHealth": "[ru] Make small daily steps: water, steps, sleep.",
+  "goalHintSkin": "[ru] Skin-care tracker and tips are coming soon.",
+  "goalHintFitness": "[ru] Keep active: steps, stretch, sleep.",
+  "healthResetTooltip": "[ru] Reset today's checks",
+  "surveyTitle": "[ru] Quick survey",
+  "surveyIntro": "[ru] Takes under a minute and helps tailor recommendations.",
+  "surveyBirthDate": "[ru] Birth date",
+  "surveyPickDate": "[ru] Pick a date",
+  "surveyGender": "[ru] Gender",
+  "surveyMale": "[ru] Male",
+  "surveyFemale": "[ru] Female",
+  "surveyOther": "[ru] Other",
+  "surveyGoal": "[ru] Main goal",
+  "surveyGoalHealth": "[ru] Overall health",
+  "surveyGoalSkin": "[ru] Skin care",
+  "surveyGoalFitness": "[ru] Fitness shape",
+  "surveySaveContinue": "[ru] Save and continue",
+  "surveyErrorFillAll": "[ru] Please fill all fields",
+  "studioMessage": "[ru] Studio is coming soon.",
+  "storeMessage": "[ru] Store is coming soon.",
+  "taskWater": "[ru] Drink 8 glasses of water 💧",
+  "taskSteps": "[ru] Walk 6–8k steps 🚶",
+  "taskSleep": "[ru] Go to bed by 23:00 😴",
+  "taskStretch": "[ru] 5–10 min stretch 🤸",
+  "taskMind": "[ru] 5 min mindfulness 🧘",
+  "authErrEmailPasswordRequired": "[ru] Email and password are required",
+  "authErrPhoneCodeRequired": "[ru] Phone and code are required",
+  "authErrInvalidCode": "[ru] Invalid code (use 0000)",
+  "healthBannerText": "[ru] Hi there! 👋 We’ll add a skincare tracker and recommendations soon.",
+  "resetToday": "[ru] Reset today’s checks",
+  "healthProgress": "[ru] {done} of {total} done",
+  "healthAllDone": "[ru] All done for today! 🎉",
+  "streakTitle": "[ru] Your streak",
+  "streakDays": "[ru] {days} days in a row",
+  "healthWeekTitle": "[ru] This week",
+  "healthDayDone": "[ru] {done}/{total}",
+  "surveyNext": "[ru] Next",
+  "surveyBack": "[ru] Back",
+  "surveySave": "[ru] Save",
+  "surveyAge": "[ru] Age",
+  "surveyFitness": "[ru] Fitness level",
+  "surveyBeginner": "[ru] Beginner",
+  "surveyIntermediate": "[ru] Intermediate",
+  "surveyAdvanced": "[ru] Advanced",
+  "surveyGoals": "[ru] Goals",
+  "goalWeightLoss": "[ru] Weight loss",
+  "goalBetterSleep": "[ru] Better sleep",
+  "goalEnergy": "[ru] More energy",
+  "goalDiscipline": "[ru] Discipline",
+  "goalStress": "[ru] Less stress",
+  "surveyLifestyle": "[ru] Lifestyle",
+  "lifestyleSedentary": "[ru] Sedentary",
+  "lifestyleActive": "[ru] Active",
+  "surveyRestrictions": "[ru] Restrictions",
+  "rVegan": "[ru] Vegan",
+  "rVegetarian": "[ru] Vegetarian",
+  "rNoAlcohol": "[ru] No alcohol",
+  "rNoCaffeine": "[ru] No caffeine",
+  "rAllergyNuts": "[ru] Nut allergy",
+  "rHypertension": "[ru] Hypertension",
+  "surveyBody": "[ru] Body parameters",
+  "surveyWeight": "[ru] Weight (kg)",
+  "surveyHeight": "[ru] Height (cm)",
+  "surveyStress": "[ru] Stress level",
+  "stressLow": "[ru] Low",
+  "stressMedium": "[ru] Medium",
+  "stressHigh": "[ru] High",
+  "surveySleep": "[ru] Sleep quality",
+  "sleepPoor": "[ru] Poor",
+  "sleepAverage": "[ru] Average",
+  "sleepGood": "[ru] Good",
+  "planTomorrow": "[ru] Plan for tomorrow",
+  "planToday": "[ru] Plan for today",
+  "aiPlan": "[ru] AI plan",
+  "catalogTasks": "[ru] Today's tasks",
+  "addToPlan": "[ru] Add to plan",
+  "addedToPlan": "[ru] Added to plan",
+  "close": "[ru] Close",
+  "newFeatureTitle": "[ru] Awesome new feature",
+  "newFeatureDesc": "[ru] Try our AI-based challenge generator!",
+  "statsTitle": "[ru] Health stats",
+  "aiTest": "[ru] AI test",
+  "statsToday": "[ru] Today",
+  "statsYesterday": "[ru] Yesterday",
+  "stats7days": "[ru] 7 days",
+  "aiAdviceToday": "[ru] Today’s tip",
+  "aiAdviceWeekly": "[ru] Weekly summary",
+  "aiAdviceNudge": "[ru] Reminder",
+  "devTestMessage": "[ru] Localization pipeline works!",
+  "testAuto": "[ru] Hello world",
+  "@appTitle": {
+    "x-sourceText": "OneBeauty",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.813682"
+  },
+  "@tabHealth": {
+    "x-sourceText": "Health",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.813682"
+  },
+  "@tabStudio": {
+    "x-sourceText": "Studio",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.813682"
+  },
+  "@tabStore": {
+    "x-sourceText": "Store",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.813682"
+  },
+  "@signOut": {
+    "x-sourceText": "Sign out",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.813682"
+  },
+  "@saved": {
+    "x-sourceText": "Saved",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.813682"
+  },
+  "@save": {
+    "x-sourceText": "Save",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.813682"
+  },
+  "@language": {
+    "x-sourceText": "Language",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.813682"
+  },
+  "@profileTitle": {
+    "x-sourceText": "Profile",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.813682"
+  },
+  "@profileEmail": {
+    "x-sourceText": "Email",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.813682"
+  },
+  "@profilePhone": {
+    "x-sourceText": "Phone",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.813682"
+  },
+  "@profileDisplayName": {
+    "x-sourceText": "Display name",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.813682"
+  },
+  "@profileAccount": {
+    "x-sourceText": "Account",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.813682"
+  },
+  "@obHealthTitle": {
+    "x-sourceText": "Daily health",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.813682"
+  },
+  "@obHealthText": {
+    "x-sourceText": "Track water, steps and sleep with simple daily checks.",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.813682"
+  },
+  "@obStudioTitle": {
+    "x-sourceText": "Studio",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.813682"
+  },
+  "@obStudioText": {
+    "x-sourceText": "Book sessions and keep your schedule tidy.",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.813682"
+  },
+  "@obStoreTitle": {
+    "x-sourceText": "Store",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.813682"
+  },
+  "@obStoreText": {
+    "x-sourceText": "Buy care products and accessories in one place.",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.813682"
+  },
+  "@obSkip": {
+    "x-sourceText": "Skip",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.813682"
+  },
+  "@obNext": {
+    "x-sourceText": "Next",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.813682"
+  },
+  "@obStart": {
+    "x-sourceText": "Start",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.813682"
+  },
+  "@authTitle": {
+    "x-sourceText": "Sign in / Register",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.813682"
+  },
+  "@authLoginTab": {
+    "x-sourceText": "Login",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.813682"
+  },
+  "@authRegisterTab": {
+    "x-sourceText": "Register",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.813682"
+  },
+  "@authPhoneTab": {
+    "x-sourceText": "Phone",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.813682"
+  },
+  "@authContinueGoogle": {
+    "x-sourceText": "Continue with Google",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.813682"
+  },
+  "@authEmail": {
+    "x-sourceText": "Email",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.813682"
+  },
+  "@authPassword": {
+    "x-sourceText": "Password",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.813682"
+  },
+  "@authSignIn": {
+    "x-sourceText": "Sign in",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.813682"
+  },
+  "@authCreateAccount": {
+    "x-sourceText": "Create account",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.813682"
+  },
+  "@authPhone": {
+    "x-sourceText": "Phone number",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.813682"
+  },
+  "@authCodeHint": {
+    "x-sourceText": "Verification code",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.813682"
+  },
+  "@authSendCode": {
+    "x-sourceText": "Send code",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.813682"
+  },
+  "@greetHello": {
+    "x-sourceText": "Hello! 👋",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.813682"
+  },
   "@greetHelloName": {
     "placeholders": {
       "name": {
         "type": "String"
       }
-    }
+    },
+    "x-sourceText": "Hello, {name}! 👋",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
   },
-  "goalHintHealth": "Делай маленькие шаги каждый день: вода, шаги, сон.",
-  "goalHintSkin": "Скоро добавим трекер ухода за кожей и рекомендации.",
-  "goalHintFitness": "Поддерживай активность: шаги, растяжка, сон.",
-  "healthResetTooltip": "Сбросить отметки на сегодня",
-  "surveyTitle": "Анкета здоровья",
-  "surveyIntro": "Займёт менее минуты и поможет подобрать рекомендации.",
-  "surveyBirthDate": "Дата рождения",
-  "surveyPickDate": "Выбрать дату",
-  "surveyGender": "Пол",
-  "surveyMale": "Мужской",
-  "surveyFemale": "Женский",
-  "surveyOther": "Другое",
-  "surveyGoal": "Основная цель",
-  "surveyGoalHealth": "Общее здоровье",
-  "surveyGoalSkin": "Уход за кожей",
-  "surveyGoalFitness": "Фитнес‑форма",
-  "surveySaveContinue": "Сохранить и продолжить",
-  "surveyErrorFillAll": "Пожалуйста, заполните все поля",
-  "studioMessage": "Studio появится совсем скоро.",
-  "storeMessage": "Store появится совсем скоро.",
-  "taskWater": "Выпей 8 стаканов воды 💧",
-  "taskSteps": "Пройди 6–8 тысяч шагов 🚶",
-  "taskSleep": "Ложись спать до 23:00 😴",
-  "taskStretch": "Растяжка 5–10 минут 🤸",
-  "taskMind": "Осознанность 5 минут 🧘",
-  "authErrEmailPasswordRequired": "Нужны email и пароль",
-  "authErrPhoneCodeRequired": "Нужны телефон и код",
-  "authErrInvalidCode": "Неверный код (используйте 0000)",
-  "healthBannerText": "Привет, ага! 👋 Скоро добавим трекер ухода за кожей и рекомендации.",
-  "resetToday": "Сбросить отметки за сегодня",
-  "healthProgress": "Выполнено {done} из {total}",
+  "@goalHintHealth": {
+    "x-sourceText": "Make small daily steps: water, steps, sleep.",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@goalHintSkin": {
+    "x-sourceText": "Skin-care tracker and tips are coming soon.",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@goalHintFitness": {
+    "x-sourceText": "Keep active: steps, stretch, sleep.",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@healthResetTooltip": {
+    "x-sourceText": "Reset today's checks",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@surveyTitle": {
+    "x-sourceText": "Quick survey",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@surveyIntro": {
+    "x-sourceText": "Takes under a minute and helps tailor recommendations.",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@surveyBirthDate": {
+    "x-sourceText": "Birth date",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@surveyPickDate": {
+    "x-sourceText": "Pick a date",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@surveyGender": {
+    "x-sourceText": "Gender",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@surveyMale": {
+    "x-sourceText": "Male",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@surveyFemale": {
+    "x-sourceText": "Female",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@surveyOther": {
+    "x-sourceText": "Other",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@surveyGoal": {
+    "x-sourceText": "Main goal",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@surveyGoalHealth": {
+    "x-sourceText": "Overall health",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@surveyGoalSkin": {
+    "x-sourceText": "Skin care",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@surveyGoalFitness": {
+    "x-sourceText": "Fitness shape",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@surveySaveContinue": {
+    "x-sourceText": "Save and continue",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@surveyErrorFillAll": {
+    "x-sourceText": "Please fill all fields",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@studioMessage": {
+    "x-sourceText": "Studio is coming soon.",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@storeMessage": {
+    "x-sourceText": "Store is coming soon.",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@taskWater": {
+    "x-sourceText": "Drink 8 glasses of water 💧",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@taskSteps": {
+    "x-sourceText": "Walk 6–8k steps 🚶",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@taskSleep": {
+    "x-sourceText": "Go to bed by 23:00 😴",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@taskStretch": {
+    "x-sourceText": "5–10 min stretch 🤸",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@taskMind": {
+    "x-sourceText": "5 min mindfulness 🧘",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@authErrEmailPasswordRequired": {
+    "x-sourceText": "Email and password are required",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@authErrPhoneCodeRequired": {
+    "x-sourceText": "Phone and code are required",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@authErrInvalidCode": {
+    "x-sourceText": "Invalid code (use 0000)",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@healthBannerText": {
+    "x-sourceText": "Hi there! 👋 We’ll add a skincare tracker and recommendations soon.",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@resetToday": {
+    "x-sourceText": "Reset today’s checks",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
   "@healthProgress": {
     "placeholders": {
       "done": {
@@ -81,20 +468,36 @@
       "total": {
         "type": "int"
       }
-    }
+    },
+    "x-sourceText": "{done} of {total} done",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
   },
-  "healthAllDone": "На сегодня всё! 🎉",
-  "streakTitle": "Ваша серия",
-  "streakDays": "{days} дней подряд",
+  "@healthAllDone": {
+    "x-sourceText": "All done for today! 🎉",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@streakTitle": {
+    "x-sourceText": "Your streak",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
   "@streakDays": {
     "placeholders": {
       "days": {
         "type": "int"
       }
-    }
+    },
+    "x-sourceText": "{days} days in a row",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
   },
-  "healthWeekTitle": "Эта неделя",
-  "healthDayDone": "{done}/{total}",
+  "@healthWeekTitle": {
+    "x-sourceText": "This week",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
   "@healthDayDone": {
     "placeholders": {
       "done": {
@@ -103,52 +506,285 @@
       "total": {
         "type": "int"
       }
-    }
+    },
+    "x-sourceText": "{done}/{total}",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
   },
-  "surveyNext": "Далее",
-  "surveyBack": "Назад",
-  "surveySave": "Сохранить",
-  "surveyAge": "Возраст",
-  "surveyFitness": "Уровень подготовки",
-  "surveyBeginner": "Новичок",
-  "surveyIntermediate": "Средний",
-  "surveyAdvanced": "Продвинутый",
-  "surveyGoals": "Цели",
-  "goalWeightLoss": "Снижение веса",
-  "goalBetterSleep": "Лучший сон",
-  "goalEnergy": "Больше энергии",
-  "goalDiscipline": "Дисциплина",
-  "goalStress": "Меньше стресса",
-  "surveyLifestyle": "Образ жизни",
-  "lifestyleSedentary": "Сидячий",
-  "lifestyleActive": "Активный",
-  "surveyRestrictions": "Ограничения",
-  "rVegan": "Веган",
-  "rVegetarian": "Вегетарианец",
-  "rNoAlcohol": "Без алкоголя",
-  "rNoCaffeine": "Без кофеина",
-  "rAllergyNuts": "Аллергия на орехи",
-  "rHypertension": "Гипертония",
-  "surveyBody": "Параметры тела",
-  "surveyWeight": "Вес (кг)",
-  "surveyHeight": "Рост (см)",
-  "surveyStress": "Уровень стресса",
-  "stressLow": "Низкий",
-  "stressMedium": "Средний",
-  "stressHigh": "Высокий",
-  "surveySleep": "Качество сна",
-  "sleepPoor": "Плохой",
-  "sleepAverage": "Средний",
-  "sleepGood": "Хороший",
-  "planTomorrow": "План на завтра",
-  "close": "Закрыть",
-  "newFeatureTitle": "",
-  "newFeatureDesc": "",
-  "planToday": "",
-  "catalogTasks": "",
-  "addToPlan": "",
-  "addedToPlan": "",
-  "devTestMessage": "",
-  "testAuto": "",
-  "aiPlan": "AI plan"
+  "@surveyNext": {
+    "x-sourceText": "Next",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@surveyBack": {
+    "x-sourceText": "Back",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@surveySave": {
+    "x-sourceText": "Save",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@surveyAge": {
+    "x-sourceText": "Age",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@surveyFitness": {
+    "x-sourceText": "Fitness level",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@surveyBeginner": {
+    "x-sourceText": "Beginner",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@surveyIntermediate": {
+    "x-sourceText": "Intermediate",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@surveyAdvanced": {
+    "x-sourceText": "Advanced",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@surveyGoals": {
+    "x-sourceText": "Goals",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@goalWeightLoss": {
+    "x-sourceText": "Weight loss",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@goalBetterSleep": {
+    "x-sourceText": "Better sleep",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@goalEnergy": {
+    "x-sourceText": "More energy",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@goalDiscipline": {
+    "x-sourceText": "Discipline",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@goalStress": {
+    "x-sourceText": "Less stress",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@surveyLifestyle": {
+    "x-sourceText": "Lifestyle",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@lifestyleSedentary": {
+    "x-sourceText": "Sedentary",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@lifestyleActive": {
+    "x-sourceText": "Active",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@surveyRestrictions": {
+    "x-sourceText": "Restrictions",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@rVegan": {
+    "x-sourceText": "Vegan",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@rVegetarian": {
+    "x-sourceText": "Vegetarian",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@rNoAlcohol": {
+    "x-sourceText": "No alcohol",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@rNoCaffeine": {
+    "x-sourceText": "No caffeine",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@rAllergyNuts": {
+    "x-sourceText": "Nut allergy",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@rHypertension": {
+    "x-sourceText": "Hypertension",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@surveyBody": {
+    "x-sourceText": "Body parameters",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@surveyWeight": {
+    "x-sourceText": "Weight (kg)",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@surveyHeight": {
+    "x-sourceText": "Height (cm)",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@surveyStress": {
+    "x-sourceText": "Stress level",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@stressLow": {
+    "x-sourceText": "Low",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@stressMedium": {
+    "x-sourceText": "Medium",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@stressHigh": {
+    "x-sourceText": "High",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@surveySleep": {
+    "x-sourceText": "Sleep quality",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@sleepPoor": {
+    "x-sourceText": "Poor",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@sleepAverage": {
+    "x-sourceText": "Average",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@sleepGood": {
+    "x-sourceText": "Good",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@planTomorrow": {
+    "x-sourceText": "Plan for tomorrow",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@planToday": {
+    "x-sourceText": "Plan for today",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@aiPlan": {
+    "x-sourceText": "AI plan",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@catalogTasks": {
+    "x-sourceText": "Today's tasks",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@addToPlan": {
+    "x-sourceText": "Add to plan",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@addedToPlan": {
+    "x-sourceText": "Added to plan",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@close": {
+    "x-sourceText": "Close",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@newFeatureTitle": {
+    "x-sourceText": "Awesome new feature",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@newFeatureDesc": {
+    "x-sourceText": "Try our AI-based challenge generator!",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@statsTitle": {
+    "x-sourceText": "Health stats",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@aiTest": {
+    "x-sourceText": "AI test",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@statsToday": {
+    "x-translationState": "machine",
+    "x-note": "auto-copied from en on 2025-08-27",
+    "x-sourceText": "Today",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@statsYesterday": {
+    "x-translationState": "machine",
+    "x-note": "auto-copied from en on 2025-08-27",
+    "x-sourceText": "Yesterday",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@stats7days": {
+    "x-translationState": "machine",
+    "x-note": "auto-copied from en on 2025-08-27",
+    "x-sourceText": "7 days",
+    "x-updated": "2025-08-27T22:17:22.814682"
+  },
+  "@aiAdviceToday": {
+    "x-translationState": "machine",
+    "x-note": "auto-copied from en on 2025-08-27",
+    "x-sourceText": "Today’s tip",
+    "x-updated": "2025-08-27T22:17:22.815682"
+  },
+  "@aiAdviceWeekly": {
+    "x-translationState": "machine",
+    "x-note": "auto-copied from en on 2025-08-27",
+    "x-sourceText": "Weekly summary",
+    "x-updated": "2025-08-27T22:17:22.815682"
+  },
+  "@aiAdviceNudge": {
+    "x-translationState": "machine",
+    "x-note": "auto-copied from en on 2025-08-27",
+    "x-sourceText": "Reminder",
+    "x-updated": "2025-08-27T22:17:22.815682"
+  },
+  "@devTestMessage": {
+    "x-sourceText": "Localization pipeline works!",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.815682"
+  },
+  "@testAuto": {
+    "x-sourceText": "Hello world",
+    "x-translationState": "machine",
+    "x-updated": "2025-08-27T22:17:22.815682"
+  }
 }
