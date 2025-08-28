@@ -1,25 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-// локализация
-import 'l10n/gen/app_localizations.dart';
+// Локализация
+import 'package:onebeauty_clean/l10n/gen/app_localizations.dart';
 
-// экраны
-import 'features/health/health_screen.dart';
-import 'features/studio/studio_screen.dart';
-import 'features/store/store_screen.dart';
-import 'features/onboarding/onboarding_screen.dart';
-import 'features/onboarding/quick_survey_screen.dart';
-import 'features/auth/auth_screen.dart';
-import 'features/profile/profile_screen.dart';
+// Экраны (ИСПОЛЬЗУЕМ package:-импорты)
+import 'package:onebeauty_clean/features/health/health_screen.dart';
+import 'package:onebeauty_clean/features/studio/studio_screen.dart';
+import 'package:onebeauty_clean/features/store/store_screen.dart';
+import 'package:onebeauty_clean/features/onboarding/onboarding_screen.dart';
+import 'package:onebeauty_clean/features/onboarding/quick_survey_screen.dart';
+import 'package:onebeauty_clean/features/auth/auth_screen.dart';
+import 'package:onebeauty_clean/features/profile/profile_screen.dart';
 
-// auth (мок)
-import 'features/auth/auth_service.dart';
+// Auth (мок)
+import 'package:onebeauty_clean/features/auth/auth_service.dart';
 
-// survey
-import 'core/survey/quick_survey_service.dart';
+// Survey
+import 'package:onebeauty_clean/core/survey/quick_survey_service.dart';
 
-void main() => runApp(const OneBeauty());
+// Dev flags
+import 'package:onebeauty_clean/features/dev/dev_flags.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // Загружаем dev-флаги до старта приложения,
+  // чтобы в рантайме иметь корректные значения.
+  await DevFlags.load();
+  runApp(const OneBeauty());
+}
 
 class OneBeauty extends StatefulWidget {
   const OneBeauty({super.key});
@@ -29,9 +39,9 @@ class OneBeauty extends StatefulWidget {
 
 class _OneBeautyState extends State<OneBeauty> {
   Locale? _locale;
-  bool _bootLoading = true;      // загрузка состояния приложения
-  bool _showOnboarding = false;  // показывать ли онбординг до входа
-  bool _needSurvey = false;      // нужна ли анкета после входа
+  bool _bootLoading = true; // загрузка состояния приложения
+  bool _showOnboarding = false; // показывать ли онбординг до входа
+  bool _needSurvey = false; // нужна ли анкета после входа
 
   final _auth = AuthService();
   final _survey = QuickSurveyService();
@@ -46,7 +56,7 @@ class _OneBeautyState extends State<OneBeauty> {
     final prefs = await SharedPreferences.getInstance();
     final seenOnboarding = prefs.getBool('seen_onboarding_v1') ?? false;
 
-    final user = await _auth.currentUser();            // ← проверка «сессии»
+    final user = await _auth.currentUser(); // проверка «сессии»
     final surveyDone = await _survey.isDone();
 
     setState(() {
@@ -80,7 +90,7 @@ class _OneBeautyState extends State<OneBeauty> {
     await _auth.signOut();
     setState(() {
       _needSurvey = false;
-      _showOnboarding = true; // после выхода можно снова показать онбординг, если хочется
+      _showOnboarding = true; // после выхода можно снова показать онбординг
     });
   }
 
@@ -91,6 +101,7 @@ class _OneBeautyState extends State<OneBeauty> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'OneBeauty',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(useMaterial3: true),
       locale: _locale,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -113,7 +124,9 @@ class _OneBeautyState extends State<OneBeauty> {
       future: _auth.currentUser(),
       builder: (context, snap) {
         if (snap.connectionState != ConnectionState.done) {
-          return const Scaffold(body: Center(child: CircularProgressIndicator()));
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
         }
         final user = snap.data;
         if (user == null) {
@@ -147,7 +160,12 @@ class _Root extends StatefulWidget {
 class _RootState extends State<_Root> {
   int index = 0;
 
-  final pages = const [HealthScreen(), StudioScreen(), StoreScreen()];
+  // ВАЖНО: без const перед HealthScreen(); используем package:-импорты выше
+  final pages = <Widget>[
+    HealthScreen(),
+    StudioScreen(),
+    StoreScreen(),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -218,9 +236,18 @@ class _RootState extends State<_Root> {
         selectedIndex: index,
         onDestinationSelected: (i) => setState(() => index = i),
         destinations: [
-          NavigationDestination(icon: const Icon(Icons.favorite), label: loc.tabHealth),
-          NavigationDestination(icon: const Icon(Icons.spa), label: loc.tabStudio),
-          NavigationDestination(icon: const Icon(Icons.store), label: loc.tabStore),
+          NavigationDestination(
+            icon: const Icon(Icons.favorite),
+            label: loc.tabHealth,
+          ),
+          NavigationDestination(
+            icon: const Icon(Icons.spa),
+            label: loc.tabStudio,
+          ),
+          NavigationDestination(
+            icon: const Icon(Icons.store),
+            label: loc.tabStore,
+          ),
         ],
       ),
     );
